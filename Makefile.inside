@@ -1,0 +1,63 @@
+.ONESHELL:
+default: libwayland libdrm
+
+packages/wayland:
+	set -ex
+
+	rm -rf packages/wayland
+	mkdir -p packages/wayland
+	(
+		cd packages/wayland
+		dget --allow-unauthenticated http://archive.ubuntu.com/ubuntu/pool/main/w/wayland/wayland_1.21.0-1.dsc
+		(
+			cd wayland-1.21.0
+			debuild -b -uc -us 
+		)
+	)
+
+packages/libdrm:
+	set -ex
+
+	rm -rf packages/libdrm
+	mkdir -p packages/libdrm
+	(
+		cd packages/libdrm
+		dget --allow-unauthenticated http://archive.ubuntu.com/ubuntu/pool/main/libd/libdrm/libdrm_2.4.113-2.dsc
+		(
+			cd libdrm-2.4.113
+			debuild -b -uc -us 
+		)
+	)
+
+BUILD=./build
+
+$(BUILD):
+	set -e
+
+	rm -rf $(BUILD)
+	mkdir -p $(BUILD)
+
+	mkdir -p $(BUILD)/include
+	mkdir -p $(BUILD)/lib/x86_64-linux-gnu
+	mkdir -p $(BUILD)/lib/x86_64-linux-gnu/pkgconfig
+
+	mkdir -p $(BUILD)/share
+
+.PHONY: libwayland
+libwayland: packages/wayland $(BUILD)
+	cp packages/wayland/wayland-1.21.0/debian/libwayland-server0/usr/lib/x86_64-linux-gnu/libwayland-server.so.0.21.0 $(BUILD)/lib/x86_64-linux-gnu/
+	cp packages/wayland/wayland-1.21.0/debian/libwayland-dev/usr/include/wayland-server.h $(BUILD)/include/
+	cp packages/wayland/wayland-1.21.0/debian/libwayland-dev/usr/lib/x86_64-linux-gnu/pkgconfig/wayland-server.pc $(BUILD)/lib/x86_64-linux-gnu/pkgconfig/
+
+libdrm: packages/libdrm $(BUILD)
+	mkdir -p $(BUILD)/share/libdrm
+
+	cp libdrm/libdrm-2.4.113/debian/libdrm2/usr/lib/x86_64-linux-gnu/libdrm.so.2.4.0 $(BUILD)/lib/x86_64-linux-gnu/
+	cp libdrm/libdrm-2.4.113/debian/libdrm-radeon1/usr/lib/x86_64-linux-gnu/libdrm_radeon.so.1.0.1 $(BUILD)/lib/x86_64-linux-gnu/
+	cp libdrm/libdrm-2.4.113/debian/libdrm-intel1/usr/lib/x86_64-linux-gnu/libdrm_intel.so.1.0.0 $(BUILD)/lib/x86_64-linux-gnu/
+	cp libdrm/libdrm-2.4.113/debian/libdrm-amdgpu1/usr/lib/x86_64-linux-gnu/libdrm_amdgpu.so.1.0.0 $(BUILD)/lib/x86_64-linux-gnu/
+
+	cp libdrm/libdrm-2.4.113/debian/libdrm-common/usr/share/libdrm/amdgpu.ids $(BUILD)/share/libdrm/
+
+	cp libdrm/libdrm-2.4.113/debian/libdrm-dev/usr/include/libdrm/drm.h $(BUILD)/include/
+	cp libdrm/libdrm-2.4.113/debian/libdrm-dev/usr/lib/x86_64-linux-gnu/pkgconfig/libdrm.pc $(BUILD)/lib/x86_64-linux-gnu/pkgconfig/
