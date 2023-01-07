@@ -21,6 +21,12 @@ jobs:
         with:
           submodules: recursive
 
+      - name: podman test
+        run: |
+          id -a
+          cat /etc/subuid
+          cat /etc/subgid
+
       - name: container apt cache
         uses: actions/cache@v3
         with:
@@ -48,8 +54,6 @@ jobs:
         with:
           path: ~/.local/share/containers/storage
           key: ubuntu_22.04-podman-cache-${{ github.run_id }}
-          restore-keys: |
-            ubuntu_22.04-podman-cache
 
       - name: container apt cache save
         uses: actions/cache/save@v3
