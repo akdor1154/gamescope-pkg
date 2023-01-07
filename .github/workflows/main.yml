@@ -1,0 +1,26 @@
+name: build package
+on:
+  push:
+    branches: [ master, ghapoc ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+#    container: archlinux:base-devel
+    steps:
+      # - name: Prepare
+      #   run: |
+      #     pacman-key --init
+      #     pacman -Syu --noconfirm
+      #     pacman -S --noconfirm git meson clang glslang libcap wlroots \
+      #       sdl2 vulkan-headers libx11 libxcomposite libxrender libxres \
+      #       libxtst libxkbcommon libdrm libinput wayland-protocols \
+      #       xorg-xwayland pipewire
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Build deps
+        run: |
+          cd ubuntu_22.04/01-deps
+          make 
