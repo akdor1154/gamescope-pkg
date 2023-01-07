@@ -1,0 +1,160 @@
+.ONESHELL:
+.SHELL = bash
+.SHELLFLAGS = -ec
+
+default: libwayland libdrm wayland-protocols hwdata vkheaders
+
+packages/wayland:
+	set -ex
+
+	rm -rf packages/wayland_tmp
+	mkdir -p packages/wayland_tmp
+	(
+		cd packages/wayland_tmp
+		dget --allow-unauthenticated http://archive.ubuntu.com/ubuntu/pool/main/w/wayland/wayland_1.21.0-1.dsc
+		(
+			cd wayland-1.21.0
+			debuild -b -uc -us 
+		)
+	)
+	mv packages/wayland_tmp packages/wayland
+
+packages/libdrm:
+	set -ex
+
+	rm -rf packages/libdrm_tmp
+	mkdir -p packages/libdrm_tmp
+	(
+		cd packages/libdrm_tmp
+		dget --allow-unauthenticated http://archive.ubuntu.com/ubuntu/pool/main/libd/libdrm/libdrm_2.4.113-2.dsc
+		(
+			cd libdrm-2.4.113
+			debuild -b -uc -us 
+		)
+	)
+	mv packages/libdrm_tmp packages/libdrm
+
+packages/wayland-protocols:
+	set -ex
+
+	rm -rf packages/wayland-protocols_tmp
+	mkdir -p packages/wayland-protocols_tmp
+	(
+		cd packages/wayland-protocols_tmp
+		dget --allow-unauthenticated http://deb.debian.org/debian/pool/main/w/wayland-protocols/wayland-protocols_1.27-1.dsc
+		(
+			cd wayland-protocols-1.27
+			debuild -b -uc -us 
+		)
+	)
+	mv packages/wayland-protocols_tmp packages/wayland-protocols
+
+packages/wlroots: 
+	set -ex
+	
+	rm -rf packages/wlroots_tmp
+	mkdir -p packages/wlroots_tmp
+	(
+		cd packages/wlroots_tmp
+		dget --allow-unauthenticated http://deb.debian.org/debian/pool/main/w/wlroots/wlroots_0.15.1-4.dsc
+		(
+			cd wlroots-0.15.1
+			debuild -b -uc -us
+		)
+	)
+	mv packages/wlroots_tmp packages/wlroots
+
+packages/hwdata:
+	set -ex
+
+	rm -rf packages/hwdata_tmp
+	mkdir -p packages/hwdata_tmp
+	(
+		cd packages/hwdata_tmp
+		dget --allow-unauthenticated http://deb.debian.org/debian/pool/main/h/hwdata/hwdata_0.365-1.dsc
+		(
+			cd hwdata-0.365
+			debuild -b -uc -us
+		)
+	)
+	mv packages/hwdata_tmp packages/hwdata
+
+packages/vkheaders:
+	set -ex
+	rm -rf packages/vkheaders_tmp
+	mkdir -p packages/vkheaders_tmp
+	(
+		cd packages/vkheaders_tmp
+		dget --allow-unauthenticated http://deb.debian.org/debian/pool/main/v/vulkan-loader/vulkan-loader_1.3.231.1-1.dsc
+		(
+			cd vulkan-loader-1.3.231.1
+			debuild -b -uc -us
+		)
+	)
+	mv packages/vkheaders_tmp packages/vkheaders
+
+BUILD=./build
+.PHONY: $(BUILD)
+$(BUILD):
+	set -e
+
+	rm -rf $(BUILD)
+	mkdir -p $(BUILD)
+
+	mkdir -p $(BUILD)/include
+	mkdir -p $(BUILD)/lib/x86_64-linux-gnu
+	mkdir -p $(BUILD)/lib/x86_64-linux-gnu/pkgconfig
+
+	mkdir -p $(BUILD)/share
+	mkdir -p $(BUILD)/share/pkgconfig
+
+.PHONY: libwayland
+libwayland: FROM=packages/wayland/wayland-1.21.0/debian
+libwayland: packages/wayland $(BUILD)
+	set -e
+
+	cp -rP $(FROM)/libwayland-server0/usr/. $(BUILD)/.
+	cp -rP $(FROM)/libwayland-dev/usr/. $(BUILD)/.
+	cp -rP $(FROM)/libwayland-bin/usr/. $(BUILD)/.
+.PHONY: libdrm
+libdrm: FROM=packages/libdrm/libdrm-2.4.113/debian
+libdrm: packages/libdrm $(BUILD)
+	set -e
+
+	mkdir -p $(BUILD)/share/libdrm
+
+	cp -rP $(FROM)/libdrm-common/usr/. $(BUILD)/.
+	cp -rP $(FROM)/libdrm2/usr/. $(BUILD)/.
+	cp -rP $(FROM)/libdrm-radeon1/usr/. $(BUILD)/.
+	cp -rP $(FROM)/libdrm-intel1/usr/. $(BUILD)/.
+	cp -rP $(FROM)/libdrm-amdgpu1/usr/. $(BUILD)/.
+
+	cp -rP $(FROM)/libdrm-dev/usr/. $(BUILD)/.
+
+.PHONY: wayland-protocols
+wayland-protocols: FROM=packages/wayland-protocols/wayland-protocols-1.27/debian
+wayland-protocols: packages/wayland-protocols $(BUILD)
+	set -e
+
+	cp -rP $(FROM)/wayland-protocols/usr/. $(BUILD)/.
+
+.PHONY: hwdata
+hwdata: FROM=packages/hwdata/hwdata-0.365/debian
+hwdata: packages/hwdata $(BUILD)
+	set -e
+	
+	cp -rP $(FROM)/hwdata/usr/. $(BUILD)/.
+
+.PHONY: vkheaders
+vkheaders: FROM=packages/vkheaders/vulkan-loader-1.3.231.1/debian
+vkheaders: packages/vkheaders $(BUILD)
+	set -e
+	
+	cp -rP $(FROM)/libvulkan1/usr/. $(BUILD)/.
+	
+	cp -rP $(FROM)/libvulkan-dev/usr/. $(BUILD)/.
+	
+
+clean:
+	rm -r $(BUILD)
+	rm -r ./packages
