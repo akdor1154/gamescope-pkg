@@ -26,8 +26,8 @@ jobs:
         with:
           path: ubuntu_22.04/.cache
           key: ubuntu_22.04-apt-cache-${{ github.run_id }}
-        restore-keys: |
-          ubuntu_22.04-apt-cache
+          restore-keys: |
+            ubuntu_22.04-apt-cache
 
       - name: Build deps cache
         run: |
@@ -46,8 +46,8 @@ jobs:
         with:
           path: ubuntu_22.04/01-deps/packages
           key: ubuntu_22.04-deps-cache-${{ github.run_id }}
-        restore-keys: |
-          ubuntu_22.04-deps-cache
+          restore-keys: |
+            ubuntu_22.04-deps-cache
 
       - name: Build deps
         run: |
