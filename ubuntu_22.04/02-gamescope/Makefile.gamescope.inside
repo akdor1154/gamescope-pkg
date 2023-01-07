@@ -1,0 +1,56 @@
+.ONESHELL:
+.SHELL = bash
+.SHELLFLAGS = -ec
+
+.PHONY: default
+default: package
+
+.PHONY: build
+build: | ./gamescope-prefix
+./gamescope-prefix: deps
+	DEPS_REL=$$(realpath --relative-to=/gamescope ./deps-prefix)
+	rm -rf './gamescope-prefix'
+
+	cd /gamescope
+	export "PKG_CONFIG_PATH=$${DEPS_REL}/lib/x86_64-linux-gnu/pkgconfig:$${DEPS_REL}/share/pkgconfig"
+	
+	meson --prefix '/opt/gamescope' '../build/02-gamescope/gamescope-build'
+	ninja -C '../build/02-gamescope/gamescope-build'
+
+	meson install \
+		-C '../build/02-gamescope/gamescope-build' \
+		--destdir '../gamescope-prefix' \
+		--skip-subprojects
+
+.PHONY: deps
+deps: | deps-prefix
+deps-prefix:
+	rm -rf ./deps-prefix
+	cp -rP ../01-deps/build deps-prefix
+
+	# patch pkgconfig prefix= into the build path...
+	ABS_BUILD=$$(realpath ./deps-prefix)
+	sed -i -e "s|prefix=/usr|prefix=$${ABS_BUILD}|" \
+		./deps-prefix/lib/x86_64-linux-gnu/pkgconfig/* \
+		./deps-prefix/share/pkgconfig/*
+
+PACKAGEPREFIX=./package-prefix
+.PHONY: package
+package: | $(PACKAGEPREFIX)
+$(PACKAGEPREFIX): build gamescope-wrapper.sh
+$(PACKAGEPREFIX):
+	mkdir -p $(PACKAGEPREFIX)
+	cp -rP ./gamescope-prefix/. $(PACKAGEPREFIX)/.
+	cp -rP ./deps-prefix/. $(PACKAGEPREFIX)/opt/gamescope/.
+
+	(
+		cd $(PACKAGEPREFIX)/opt/gamescope/bin
+		mv gamescope gamescope.real
+	)
+	cp -P gamescope-wrapper.sh $(PACKAGEPREFIX)/opt/gamescope/bin/gamescope
+
+clean:
+	rm -rf ./deps-prefix
+	rm -rf $(BUILD)
+	rm -rf ./gamescope-prefix
+	rm -rf $(PACKAGEPREFIX)
