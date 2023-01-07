@@ -1,0 +1,11 @@
+# it's going in opt..
+gamescope binary: dir-or-file-in-opt
+
+# sorry but i'm not committing plaintext email into source
+gamescope binary: malformed-contact
+
+gamescope binary: python3-script-but-no-python3-dep *[opt/gamescope/share/*]*
+
+gamescope binary: script-not-executable *[opt/gamescope/share/*]*
+
+gamescope binary: initial-upload-closes-no-bugs

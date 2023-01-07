@@ -1,0 +1,13 @@
+Section: contrib/games
+Priority: optional
+Maintainer: Jarrad Whitaker <akdor1154 📧 gmail.com>
+Homepage: https://github.com/akdor1154/gamescope-pkg
+Package: gamescope
+Version: 3.11.51-1
+Architecture: amd64
+Depends: xwayland, libc6 (>= 2.34), libcap2 (>= 1:2.10), libdrm2 (>= 2.4.109), libgcc-s1 (>= 3.4), libinput10 (>= 1.19.1), libpipewire-0.3-0 (>= 0.3.1), libpixman-1-0 (>= 0.27.4), libsdl2-2.0-0 (>= 2.0.12), libseat1 (>= 0.5.0), libstdc++6 (>= 12), libudev1 (>= 183), libvulkan1 (>= 1.2.131.2), libwayland-client0 (>= 1.20.0), libx11-6, libxcomposite1 (>= 1:0.4.5), libxdamage1 (>= 1:1.1), libxext6, libxfixes3 (>= 1:5.0), libxkbcommon0 (>= 1.0.0), libxrender1, libxres1 (>= 2:1.2.1), libxtst6, libxxf86vm1
+Description: Micro-compositor for game scaling
+ Unofficial package for the Gamescope compositor.
+ Gamescope itself is maintained at https://github.com/Plagman/gamescope.
+ Please do not report bugs to the Gamescope authors unless you have tested
+ with Gamescope compiled yourself from that upstream repo.
