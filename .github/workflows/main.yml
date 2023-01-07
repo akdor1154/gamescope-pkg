@@ -31,7 +31,7 @@ jobs:
         run: |
           cd ubuntu_22.04/01-deps
           make image
-          sudo chmod -R a+r ubuntu_22.04/.cache
+          sudo chmod -R a+r .cache
 
       - name: container apt cache save
         uses: actions/cache/save@v3
