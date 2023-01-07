@@ -29,11 +29,27 @@ jobs:
           restore-keys: |
             ubuntu_22.04-apt-cache
 
-      - name: Build deps cache
+      - name: container image cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.local/share/containers/storage
+          key: ubuntu_22.04-podman-cache-${{ github.run_id }}
+          restore-keys: |
+            ubuntu_22.04-podman-cache
+
+      - name: Build deps image
         run: |
           cd ubuntu_22.04/01-deps
           make image
           sudo chmod -R a+r ../.cache
+
+      - name: container image cache save
+        uses: actions/cache/save@v3
+        with:
+          path: ~/.local/share/containers/storage
+          key: ubuntu_22.04-podman-cache-${{ github.run_id }}
+          restore-keys: |
+            ubuntu_22.04-podman-cache
 
       - name: container apt cache save
         uses: actions/cache/save@v3
