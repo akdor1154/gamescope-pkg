@@ -153,6 +153,10 @@ vkheaders: packages/vkheaders $(BUILD)
 	cp -rP $(FROM)/libvulkan1/usr/. $(BUILD)/.
 	
 	cp -rP $(FROM)/libvulkan-dev/usr/. $(BUILD)/.
+
+	#hack, workaround what something i'm 99% sure is a libvulkan [packaging?] bug
+	sed -i -e 's|libdir=.*|libdir=$${exec_prefix}/lib/x86_64-linux-gnu|' \
+		$(BUILD)/lib/x86_64-linux-gnu/pkgconfig/vulkan.pc
 	
 
 clean:

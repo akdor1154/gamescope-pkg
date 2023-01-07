@@ -1,0 +1,33 @@
+.ONESHELL:
+.SHELL = bash
+.SHELLFLAGS = -ec
+
+.PHONY: default
+default: build
+
+.PHONY: build
+build: deps
+
+	ls -la
+
+	cd gamescope
+	export PKG_CONFIG_PATH=../deps-prefix/lib/x86_64-linux-gnu/pkgconfig:../deps-prefix/share/pkgconfig
+	
+	meson build/
+	ninja -C build/
+
+.PHONY: deps
+deps: | deps-prefix
+deps-prefix:
+	rm -rf deps-prefix
+	cp -r ./build deps-prefix
+
+	# patch pkgconfig prefix= into the build path...
+	ABS_BUILD=$$(realpath ./deps-prefix)
+	sed -i -e "s|prefix=/usr|prefix=$${ABS_BUILD}|" \
+		./deps-prefix/lib/x86_64-linux-gnu/pkgconfig/* \
+		./deps-prefix/share/pkgconfig/*
+
+clean:
+	rm -rf ./deps-prefix
+	rm -rf ./gamescope/build
