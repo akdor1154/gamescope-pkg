@@ -26,6 +26,7 @@ jobs:
           id -a
           cat /etc/subuid
           cat /etc/subgid
+          exit 1
 
       - name: container apt cache
         uses: actions/cache@v3
