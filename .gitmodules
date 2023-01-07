@@ -1,0 +1,3 @@
+[submodule "gamescope"]
+	path = gamescope
+	url = https://github.com/Plagman/gamescope
