@@ -3,24 +3,26 @@
 .SHELLFLAGS = -ec
 
 .PHONY: default
-default: build
+default: package
 
 .PHONY: build
-build: deps
-
-	ls -la
+build: | gamescope-prefix
+gamescope-prefix: deps
 
 	cd gamescope
 	export PKG_CONFIG_PATH=../deps-prefix/lib/x86_64-linux-gnu/pkgconfig:../deps-prefix/share/pkgconfig
 	
-	meson build/
+	meson --prefix '/opt/gamescope' build/
 	ninja -C build/
+
+	rm -rf ../../gamescope-prefix
+	meson install -C build/ --destdir ../../gamescope-prefix --skip-subprojects
 
 .PHONY: deps
 deps: | deps-prefix
 deps-prefix:
 	rm -rf deps-prefix
-	cp -r ./build deps-prefix
+	cp -rP ./build deps-prefix
 
 	# patch pkgconfig prefix= into the build path...
 	ABS_BUILD=$$(realpath ./deps-prefix)
@@ -28,6 +30,22 @@ deps-prefix:
 		./deps-prefix/lib/x86_64-linux-gnu/pkgconfig/* \
 		./deps-prefix/share/pkgconfig/*
 
+.PHONY: package
+package: | package-prefix
+package-prefix: build gamescope-wrapper.sh
+package-prefix:
+	mkdir -p package-prefix
+	cp -rP ./gamescope-prefix/. ./package-prefix/.
+	cp -rP ./deps-prefix/. ./package-prefix/opt/gamescope/.
+
+	(
+		cd ./package-prefix/opt/gamescope/bin
+		mv gamescope gamescope.real
+	)
+	cp -P gamescope-wrapper.sh ./package-prefix/opt/gamescope/bin/gamescope
+
 clean:
 	rm -rf ./deps-prefix
 	rm -rf ./gamescope/build
+	rm -rf ./package-prefix
+	rm -rf ./gamescope-prefix
