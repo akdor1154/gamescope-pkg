@@ -1,0 +1,16 @@
+name: cachetar
+description: set up a tar that always executes with sudo to work around stupid gha cache impotence
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        sudo mkdir /cachetar
+        cat | sudo tee /cachetar/tar <<'EOF'
+        #!/bin/sh
+        exec sudo /usr/bin/tar "$@"
+        EOF
+        sudo chmod +x /cachetar/tar
+
+        cat /cachetar/tar
+        /cachetar/tar --help

@@ -1,0 +1,82 @@
+name: build package
+on:
+  push:
+    branches: [ master, ghapoc ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  package:
+    runs-on: ubuntu-latest
+#    container: archlinux:base-devel
+    steps:
+      - name: prepare build deps
+        run: |
+          sudo apt-get install -y pandoc
+
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: prepare
+        uses: ./.github/actions/cachetar
+
+      - name: podman test
+        run: |
+          id -a
+          cat /etc/subuid
+          cat /etc/subgid
+
+      - name: container apt cache
+        uses: actions/cache@v3
+        env:
+          PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
+        with:
+          path: ubuntu_22.04/.cache
+          key: ubuntu_22.04-apt-cache-${{ github.run_id }}
+          restore-keys: |
+            ubuntu_22.04-apt-cache
+
+      - name: container image cache
+        uses: actions/cache@v3
+        env:
+          PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
+        with:
+          path: ~/.local/share/containers/storage
+          key: ubuntu_22.04-podman-cache-${{ github.run_id }}
+          restore-keys: |
+            ubuntu_22.04-podman-cache
+
+      - name: deps cache
+        uses: actions/cache@v3
+        env:
+          PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
+        with:
+          path: ubuntu_22.04/01-deps/packages
+          key: ubuntu_22.04-deps-cache-${{ github.run_id }}
+          restore-keys: |
+            ubuntu_22.04-deps-cache
+
+      - name: Build deps image
+        run: |
+          cd ubuntu_22.04/01-deps
+          make image
+
+      - name: Build deps
+        run: |
+          cd ubuntu_22.04/01-deps
+          make 
+
+      - name: Build gamescope build image
+        run: |
+          cd ubuntu_22.04/02-gamescope
+          make image
+
+      - name: Build gamescope
+        run: |
+          cd ubuntu_22.04/02-gamescope
+          make
+
+      - name: Build package
+        run: |
+          cd ubuntu_22.04/03-package
+          make

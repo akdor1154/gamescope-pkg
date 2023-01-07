@@ -8,7 +8,7 @@ image:
 	mkdir -p ../.cache/image-apt-cache
 	podman build \
 		--tag gamescopebuildimg \
-		--volume $$(pwd)/../.cache/image-apt-cache:/var/cache/apt \
+		--volume $$(pwd)/../.cache/image-apt-cache:/var/cache/apt:U \
 		-f gamescope.Containerfile .
 
 .PHONY: package
