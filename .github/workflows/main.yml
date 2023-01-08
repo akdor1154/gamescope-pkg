@@ -21,7 +21,7 @@ jobs:
       - name: prepare
         run: |
           sudo mkdir /cachetar
-          cat | sudo tee /cachetar/tar /<<EOF
+          cat | sudo tee /cachetar/tar <<EOF
           #!/bin/sh
           exec sudo /usr/bin/tar "$@"
           EOF
