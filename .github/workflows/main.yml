@@ -20,18 +20,18 @@ jobs:
 
       - name: prepare
         run: |
-          setfacl -R -m u:runner:rwX .
-          setfacl -Rd -m u:runner:rwX .
+          sudo mkdir /cachetar
+          cat | sudo tee /cachetar/tar /<<EOF
+          #!/bin/sh
+          exec sudo /usr/bin/tar "$@"
+          EOF
+          sudo chmod +x /cachetar/tar
 
-          mkdir -p ~/.local/share/containers/storage
-          cd ~/.local/share/containers/storage
-          setfacl -R -m u:runner:rwX .
-          setfacl -Rd -m u:runner:rwX .
+          /cachetar/tar --help
 
       - uses: actions/checkout@v3
         with:
           submodules: recursive
-
 
       - name: podman test
         run: |
@@ -41,6 +41,8 @@ jobs:
 
       - name: container apt cache
         uses: actions/cache@v3
+        env:
+          PATH: /cachetar:${PATH}
         with:
           path: ubuntu_22.04/.cache
           key: ubuntu_22.04-apt-cache-${{ github.run_id }}
@@ -49,6 +51,8 @@ jobs:
 
       - name: container image cache
         uses: actions/cache@v3
+        env:
+          PATH: /cachetar:${PATH}
         with:
           path: ~/.local/share/containers/storage
           key: ubuntu_22.04-podman-cache-${{ github.run_id }}
@@ -63,18 +67,24 @@ jobs:
 
       - name: container image cache save
         uses: actions/cache/save@v3
+        env:
+          PATH: /cachetar:${PATH}
         with:
           path: ~/.local/share/containers/storage
           key: ubuntu_22.04-podman-cache-${{ github.run_id }}
 
       - name: container apt cache save
         uses: actions/cache/save@v3
+        env:
+          PATH: /cachetar:${PATH}
         with:
           path: ubuntu_22.04/.cache
           key: ubuntu_22.04-apt-cache-${{ github.run_id }}
 
       - name: deps cache
         uses: actions/cache@v3
+        env:
+          PATH: /cachetar:${PATH}
         with:
           path: ubuntu_22.04/01-deps/packages
           key: ubuntu_22.04-deps-cache-${{ github.run_id }}
