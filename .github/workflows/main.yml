@@ -5,34 +5,17 @@ on:
   pull_request:
     branches: [ master ]
 jobs:
-  build:
+  01-deps:
     runs-on: ubuntu-latest
 #    container: archlinux:base-devel
     steps:
-      # - name: Prepare
-      #   run: |
-      #     pacman-key --init
-      #     pacman -Syu --noconfirm
-      #     pacman -S --noconfirm git meson clang glslang libcap wlroots \
-      #       sdl2 vulkan-headers libx11 libxcomposite libxrender libxres \
-      #       libxtst libxkbcommon libdrm libinput wayland-protocols \
-      #       xorg-xwayland pipewire
-
-      - name: prepare
-        run: |
-          sudo mkdir /cachetar
-          cat | sudo tee /cachetar/tar <<'EOF'
-          #!/bin/sh
-          exec sudo /usr/bin/tar "$@"
-          EOF
-          sudo chmod +x /cachetar/tar
-
-          cat /cachetar/tar
-          /cachetar/tar --help
 
       - uses: actions/checkout@v3
         with:
           submodules: recursive
+
+      - name: prepare
+        uses: ./.github/actions/cachetar
 
       - name: podman test
         run: |
@@ -64,24 +47,7 @@ jobs:
         run: |
           cd ubuntu_22.04/01-deps
           make image
-          ls -r
-
-      - name: container image cache save
-        uses: actions/cache/save@v3
-        env:
-          PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
-        with:
-          path: ~/.local/share/containers/storage
-          key: ubuntu_22.04-podman-cache-${{ github.run_id }}
-
-      - name: container apt cache save
-        uses: actions/cache/save@v3
-        env:
-          PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
-        with:
-          path: ubuntu_22.04/.cache
-          key: ubuntu_22.04-apt-cache-${{ github.run_id }}
-
+          
       - name: deps cache
         uses: actions/cache@v3
         env:
@@ -96,3 +62,7 @@ jobs:
         run: |
           cd ubuntu_22.04/01-deps
           make 
+
+  02-gamescope:
+
+    runs-on: ubuntu-latest
