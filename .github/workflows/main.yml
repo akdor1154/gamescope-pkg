@@ -63,6 +63,3 @@ jobs:
           cd ubuntu_22.04/01-deps
           make 
 
-  02-gamescope:
-
-    runs-on: ubuntu-latest
