@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 #    container: archlinux:base-devel
     steps:
+      - name: prepare build deps
+        run: |
+          sudo apt-get install -y pandoc
 
       - uses: actions/checkout@v3
         with:
@@ -77,4 +80,3 @@ jobs:
         run: |
           cd ubuntu_22.04/03-package
           make
-          
