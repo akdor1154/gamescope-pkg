@@ -26,9 +26,11 @@ image:
 	mkdir -p ../.cache/image-apt-cache
 	podman build \
 		--tag gamescopedepsimg \
-		--volume $$(pwd)/../.cache/image-apt-cache:/var/cache/apt \
+		--volume $$(pwd)/../.cache/image-apt-cache:/var/cache/apt:U \
 		-f deps.Containerfile .
 
 clean:
-	rm -r ./build
-	rm -r ./packages
+	rm -rf ./build
+	rm -rf ./packages
+	podman image rm gamescopedepsimg || true
+	podman rm gamescopedeps || true

@@ -79,7 +79,7 @@ test-install: test-image
 	podman create \
 		--name gamescopetest \
 		--volume .:/pkg \
-		--volume $$(pwd)/../.cache/image-apt-cache:/var/cache/apt \
+		--volume $$(pwd)/../.cache/image-apt-cache:/var/cache/apt:U \
 		gamescopetestimg \
 		/pkg/testinstall.sh
 	trap "podman rm gamescopetest" EXIT
@@ -91,5 +91,5 @@ test-image:
 	mkdir -p ../.cache/image-apt-cache
 	podman build \
 		--tag gamescopetestimg \
-		--volume $$(pwd)/../.cache/image-apt-cache:/var/cache/apt \
+		--volume $$(pwd)/../.cache/image-apt-cache:/var/cache/apt:U \
 		-f test.Containerfile .

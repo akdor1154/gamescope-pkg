@@ -17,16 +17,27 @@ jobs:
       #       sdl2 vulkan-headers libx11 libxcomposite libxrender libxres \
       #       libxtst libxkbcommon libdrm libinput wayland-protocols \
       #       xorg-xwayland pipewire
+
+      - name: prepare
+        run: |
+          setfacl -R -m u:runner:rwX .
+          setfacl -Rd -m u:runner:rwX .
+
+          mkdir -p ~/.local/share/containers/storage
+          cd ~/.local/share/containers/storage
+          setfacl -R -m u:runner:rwX .
+          setfacl -Rd -m u:runner:rwX .
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
+
 
       - name: podman test
         run: |
           id -a
           cat /etc/subuid
           cat /etc/subgid
-          exit 1
 
       - name: container apt cache
         uses: actions/cache@v3
@@ -48,7 +59,7 @@ jobs:
         run: |
           cd ubuntu_22.04/01-deps
           make image
-          sudo chmod -R a+r ../.cache
+          ls -r
 
       - name: container image cache save
         uses: actions/cache/save@v3
