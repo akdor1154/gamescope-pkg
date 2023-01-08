@@ -23,7 +23,7 @@ jobs:
           sudo mkdir /cachetar
           cat | sudo tee /cachetar/tar <<EOF
           #!/bin/sh
-          exec sudo /usr/bin/tar "$@"
+          exec sudo /usr/bin/tar "\$@"
           EOF
           sudo chmod +x /cachetar/tar
 
