@@ -69,10 +69,11 @@ lint: $(PACKAGE_NAME).deb
 compute-deps:
 	# this outputs computed dependencies, which you can MANUALLY update+commit into
 	# debian/control.
-	dpkg-shlibdeps pkg_tmp/opt/gamescope/bin/gamescope.real \
+	dpkg-shlibdeps ./$(PACKAGE_NAME)/opt/gamescope/bin/gamescope.real \
 		-O \
-		-lpkg_tmp/opt/gamescope/lib/x86_64-linux-gnu \
-		-xlibwayland-server0
+		-l./$(PACKAGE_NAME)/opt/gamescope/lib/x86_64-linux-gnu \
+		-xlibwayland-server0 \
+		-xlibdrm2
 
 .PHONY: test-install
 test-install: test-image

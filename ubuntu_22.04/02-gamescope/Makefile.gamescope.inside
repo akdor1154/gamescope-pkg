@@ -16,7 +16,6 @@ build: | ./gamescope-prefix
 	
 	meson \
 		--prefix '/opt/gamescope' \
-		--buildtype debugoptimized \
 		'../build/02-gamescope/gamescope-build'
 	ninja -C '../build/02-gamescope/gamescope-build'
 
