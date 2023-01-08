@@ -3,7 +3,8 @@ description: set up a tar that always executes with sudo to work around stupid g
 runs:
   using: composite
   steps:
-    - run: |
+    - shell: bash
+      run: |
         sudo mkdir /cachetar
         cat | sudo tee /cachetar/tar <<'EOF'
         #!/bin/sh
