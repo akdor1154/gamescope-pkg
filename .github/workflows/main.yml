@@ -27,6 +27,7 @@ jobs:
           EOF
           sudo chmod +x /cachetar/tar
 
+          cat /cachetar
           /cachetar/tar --help
 
       - uses: actions/checkout@v3
