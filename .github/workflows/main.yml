@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [ master ]
 jobs:
-  deps:
+  package:
     runs-on: ubuntu-latest
 #    container: archlinux:base-devel
     steps:
@@ -43,11 +43,6 @@ jobs:
           restore-keys: |
             ubuntu_22.04-podman-cache
 
-      - name: Build deps image
-        run: |
-          cd ubuntu_22.04/01-deps
-          make image
-          
       - name: deps cache
         uses: actions/cache@v3
         env:
@@ -58,8 +53,28 @@ jobs:
           restore-keys: |
             ubuntu_22.04-deps-cache
 
+      - name: Build deps image
+        run: |
+          cd ubuntu_22.04/01-deps
+          make image
+
       - name: Build deps
         run: |
           cd ubuntu_22.04/01-deps
           make 
 
+      - name: Build gamescope build image
+        run: |
+          cd ubuntu_22.04/02-gamescope
+          make image
+
+      - name: Build gamescope
+        run: |
+          cd ubuntu_22.04/02-gamescope
+          make
+
+      - name: Build package
+        run: |
+          cd ubuntu_22.04/03-package
+          make
+          
