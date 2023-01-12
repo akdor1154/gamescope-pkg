@@ -1,3 +1,15 @@
+gamescope (3.11.51-3) jammy; urgency=medium
+
+  * Internal version, no release 
+
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Thu, 12 Jan 2023 20:54:16 +1100
+
+gamescope (3.11.51-2) jammy; urgency=medium
+
+  * Internal version, no release.
+
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Thu, 12 Jan 2023 20:53:51 +1100
+
 gamescope (3.11.51-1) contrib; urgency=medium
 
   * Initial release.
