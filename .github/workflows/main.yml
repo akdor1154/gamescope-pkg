@@ -119,7 +119,7 @@ jobs:
           key: ubuntu_22.04-apt-cache-${{ github.run_id }}
 
   release:
-    if: startsWith(github.ref_name, 'v') and github.ref_type == 'tag'
+    if: startsWith(github.ref_name, 'v') && github.ref_type == 'tag'
     needs: package
     runs-on: ubuntu-latest
     steps:
