@@ -6,8 +6,13 @@ include ../../gamescope.mk
 
 export GAMESCOPE_VERSION
 export DEB_RELEASE
+export DEB_RELEASE_SUFFIX := $(shell \
+	git name-rev --name-only --tags --refs v$(GAMESCOPE_VERSION)-$(DEB_RELEASE) --no-undefined HEAD \
+	&& echo "" \
+	|| echo "~git$$(git rev-parse --short HEAD)" \
+)
 
-export PACKAGE_VERSION=$(GAMESCOPE_VERSION)-$(DEB_RELEASE)
+export PACKAGE_VERSION=$(GAMESCOPE_VERSION)-$(DEB_RELEASE)$(DEB_RELEASE_SUFFIX)
 export PACKAGE_NAME=gamescope_$(PACKAGE_VERSION)
 
 .PHONY: default
@@ -19,7 +24,7 @@ package: | $(PACKAGE_NAME).deb
 .PHONY: ./$(PACKAGE_NAME)
 ./$(PACKAGE_NAME):
 	# cause an error if these are missing
-	echo $${GAMESCOPE_VERSION:?} $${DEB_RELEASE:?} $${PACKAGE_VERSION:?}
+	echo $${GAMESCOPE_VERSION:?} $${DEB_RELEASE:?}$${DEB_RELEASE_SUFFIX:?} $${PACKAGE_VERSION:?}
 
 	rm -rf pkg_tmp $${PACKAGE_NAME:?}
 
