@@ -1,9 +1,9 @@
 name: build package
 on:
   push:
-    branches: [ master, ghapoc ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 jobs:
   package:
     runs-on: ubuntu-latest
