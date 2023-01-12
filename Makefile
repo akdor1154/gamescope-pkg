@@ -28,8 +28,9 @@ release:
 .PHONY: github_release
 github_release:
 	git name-rev --name-only --tags --refs v$${VERSION:?} --no-undefined HEAD || exit 1
+	dpkg-parsechangelog -l ubuntu_22.04/03-package/changelog --all > gh_changelog
 	gh release create "v$${VERSION:?}" \
 		--title "v$${VERSION:?}" \
-		--notes "" \
+		--notes-file gh_changelog \
 		--draft \
 		ubuntu_22.04/03-package/gamescope_$${VERSION:?}_amd64.deb
