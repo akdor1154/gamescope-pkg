@@ -1,7 +1,8 @@
 name: build package
 on:
   push:
-    branches: [ main ]
+    branches: [ main, gha ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main ]
 jobs:
@@ -79,9 +80,16 @@ jobs:
 
       - name: Build package
         run: |
-          git fetch --tags --no-recurse-submodules
+          git fetch --tags --no-recurse-submodules --force
           cd ubuntu_22.04/03-package
           make
+
+      - name: Publish artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: gamescope-deb
+          path: ubuntu_22.04/03-package/*.deb
+
 
       - name: save container image cache
         uses: actions/cache/save@v3
@@ -109,3 +117,21 @@ jobs:
         with:
           path: ubuntu_22.04/.cache
           key: ubuntu_22.04-apt-cache-${{ github.run_id }}
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: gamescope-deb
+          path: ubuntu_22.04/03-package/
+
+      - name: Publish github release
+        run: |
+          git fetch --tags --force
+          make github_release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
