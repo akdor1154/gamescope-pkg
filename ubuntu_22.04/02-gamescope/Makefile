@@ -2,6 +2,9 @@
 .SHELL = bash
 .SHELLFLAGS = -ec
 
+include ../../gamescope.mk
+export GAMESCOPE_TAG
+
 default: package
 
 image:
@@ -23,11 +26,13 @@ package: | ./package
 	podman create \
 		--name gamescopebuild \
 		--volume ..:/build \
-		--volume ../../gamescope:/gamescope \
+		--volume ../../.git:/src/.git \
+		--volume ../../gamescope:/src/gamescope \
 		--workdir /build/02-gamescope \
 		gamescopebuildimg \
 		make -f Makefile.gamescope.inside \
-			PACKAGEPREFIX=./package_tmp
+			PACKAGEPREFIX=./package_tmp \
+			GAMESCOPE_TAG=$${GAMESCOPE_TAG:?}
 
 	trap "podman rm gamescopebuild" EXIT
 

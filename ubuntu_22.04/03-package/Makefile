@@ -2,7 +2,13 @@
 .SHELL = bash
 .SHELLFLAGS = -exc
 
-PACKAGE_NAME=gamescope_3.11.51-1
+include ../../gamescope.mk
+
+export GAMESCOPE_VERSION
+export DEB_RELEASE
+
+export PACKAGE_VERSION=$(GAMESCOPE_VERSION)-$(DEB_RELEASE)
+export PACKAGE_NAME=gamescope_$(PACKAGE_VERSION)
 
 .PHONY: default
 default: package
@@ -12,7 +18,10 @@ package: | $(PACKAGE_NAME).deb
 
 .PHONY: ./$(PACKAGE_NAME)
 ./$(PACKAGE_NAME):
-	rm -rf pkg_tmp $(PACKAGE_NAME)
+	# cause an error if these are missing
+	echo $${GAMESCOPE_VERSION:?} $${DEB_RELEASE:?} $${PACKAGE_VERSION:?}
+
+	rm -rf pkg_tmp $${PACKAGE_NAME:?}
 
 	umask 0022
 
@@ -51,7 +60,7 @@ package: | $(PACKAGE_NAME).deb
 	# build manual
 	mkdir -p pkg_tmp/usr/share/man/man1
 	(
-		echo "% GAMESCOPE(1) 3.11.51-1 | Autogenned from gamescope readme"
+		echo "% GAMESCOPE(1) $${PACKAGE_VERSION:?} | Autogenned from gamescope readme"
 		cat man_header.md
 		cat pkg_tmp/opt/gamescope/doc/README.md
 	) | pandoc --standalone --to man -o pkg_tmp/usr/share/man/man1/gamescope.1
@@ -59,19 +68,19 @@ package: | $(PACKAGE_NAME).deb
 	mv pkg_tmp $(PACKAGE_NAME)
 
 $(PACKAGE_NAME).deb: ./$(PACKAGE_NAME)
-	dpkg-deb -z5 --root-owner-group --build $(PACKAGE_NAME)
+	dpkg-deb -z5 --root-owner-group --build $${PACKAGE_NAME:?}
 
 .PHONY: lint
 lint: $(PACKAGE_NAME).deb
-	lintian $(PACKAGE_NAME).deb
+	lintian $${PACKAGE_NAME:?}.deb
 
 .PHONY: compute-deps
 compute-deps:
 	# this outputs computed dependencies, which you can MANUALLY update+commit into
 	# debian/control.
-	dpkg-shlibdeps ./$(PACKAGE_NAME)/opt/gamescope/bin/gamescope.real \
+	dpkg-shlibdeps ./$${PACKAGE_NAME:?}/opt/gamescope/bin/gamescope.real \
 		-O \
-		-l./$(PACKAGE_NAME)/opt/gamescope/lib/x86_64-linux-gnu \
+		-l./$${PACKAGE_NAME:?}/opt/gamescope/lib/x86_64-linux-gnu \
 		-xlibwayland-server0 \
 		-xlibdrm2
 
