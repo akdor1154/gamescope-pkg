@@ -2,7 +2,7 @@ gamescope (3.11.51-7) jammy; urgency=medium
 
   * set gh release notes from debian changelog
 
- -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Thu, 12 Jan 2023 22:22:06 +1100
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Thu, 12 Jan 2023 22:24:23 +1100
 
 gamescope (3.11.51-6) jammy; urgency=medium
 
