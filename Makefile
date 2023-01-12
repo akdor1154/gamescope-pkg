@@ -28,7 +28,7 @@ release:
 .PHONY: github_release
 github_release:
 	git name-rev --name-only --tags --refs v$${VERSION:?} --no-undefined HEAD || exit 1
-	dpkg-parsechangelog -l ubuntu_22.04/03-package/changelog --all > gh_changelog
+	dpkg-parsechangelog -l ubuntu_22.04/03-package/changelog > gh_changelog
 	gh release create "v$${VERSION:?}" \
 		--title "v$${VERSION:?}" \
 		--notes-file gh_changelog \
