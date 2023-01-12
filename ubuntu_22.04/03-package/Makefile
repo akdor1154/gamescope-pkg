@@ -13,7 +13,7 @@ export DEB_RELEASE_SUFFIX := $(shell \
 )
 
 export PACKAGE_VERSION=$(GAMESCOPE_VERSION)-$(DEB_RELEASE)$(DEB_RELEASE_SUFFIX)
-export PACKAGE_NAME=gamescope_$(PACKAGE_VERSION)
+export PACKAGE_NAME=gamescope_$(PACKAGE_VERSION)_amd64
 
 .PHONY: default
 default: package
@@ -24,7 +24,7 @@ package: | $(PACKAGE_NAME).deb
 .PHONY: ./$(PACKAGE_NAME)
 ./$(PACKAGE_NAME):
 	# cause an error if these are missing
-	echo $${GAMESCOPE_VERSION:?} $${DEB_RELEASE:?}$${DEB_RELEASE_SUFFIX:?} $${PACKAGE_VERSION:?}
+	echo $${GAMESCOPE_VERSION:?} $${DEB_RELEASE:?}$${DEB_RELEASE_SUFFIX} $${PACKAGE_VERSION:?}
 
 	rm -rf pkg_tmp $${PACKAGE_NAME:?}
 

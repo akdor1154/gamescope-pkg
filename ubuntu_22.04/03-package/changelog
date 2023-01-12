@@ -1,6 +1,13 @@
+gamescope (3.11.51-5) jammy; urgency=medium
+
+  * versioning, attempt 5
+
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Thu, 12 Jan 2023 21:12:35 +1100
+
 gamescope (3.11.51-4) jammy; urgency=medium
 
   * get versioning working, maybe...
+  * no release
 
  -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Thu, 12 Jan 2023 21:08:14 +1100
 
