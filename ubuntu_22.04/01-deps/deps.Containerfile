@@ -11,3 +11,13 @@ RUN apt-get -y build-dep \
     libwayland-server0 \
     wayland-protocols \
     libvulkan-dev
+
+# debian sid
+RUN apt-key adv --keyserver keyserver.ubuntu.com \
+        --recv-keys 1F89983E0081FDE018F3CC9673A4F27B8DD47936 \
+    && apt-key adv --keyserver keyserver.ubuntu.com \
+        --recv-keys AC530D520F2F3269F5E98313A48449044AAD5C5D
+COPY apt /etc/apt/
+RUN apt-get -y update \
+    && dpkg --clear-avail \
+    && sync-available

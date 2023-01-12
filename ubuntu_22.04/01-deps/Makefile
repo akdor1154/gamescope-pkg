@@ -20,6 +20,19 @@ default: ./build
 	podman start --attach gamescopedeps
 
 	mv build_tmp ./build
+
+.PHONY: shell
+shell: image
+	set -ex
+
+	exec podman run -it --rm \
+		--name gamescopedeps \
+		--volume .:/01-deps \
+		--workdir /01-deps \
+		gamescopedepsimg \
+		bash
+
+
 	
 .PHONY: image
 image:
