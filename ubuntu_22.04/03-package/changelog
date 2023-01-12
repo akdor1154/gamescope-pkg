@@ -1,3 +1,9 @@
+gamescope (3.11.51-4) jammy; urgency=medium
+
+  * get versioning working, maybe...
+
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Thu, 12 Jan 2023 21:08:14 +1100
+
 gamescope (3.11.51-3) jammy; urgency=medium
 
   * Internal version, no release 
