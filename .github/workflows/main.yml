@@ -90,12 +90,6 @@ jobs:
           name: gamescope-deb
           path: ubuntu_22.04/03-package/*.deb
 
-      - name: Publish github release
-        if: 
-        run: |
-          make github_release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: save container image cache
         uses: actions/cache/save@v3
@@ -134,3 +128,10 @@ jobs:
         with:
           name: gamescope-deb
           path: ubuntu_22.04/03-package/
+
+      - name: Publish github release
+        run: |
+          make github_release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
