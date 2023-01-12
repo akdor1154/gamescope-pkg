@@ -80,7 +80,7 @@ jobs:
 
       - name: Build package
         run: |
-          git fetch --tags --no-recurse-submodules
+          git fetch --tags --no-recurse-submodules --force
           cd ubuntu_22.04/03-package
           make
 
