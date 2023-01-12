@@ -7,7 +7,7 @@ include ../../gamescope.mk
 export GAMESCOPE_VERSION
 export DEB_RELEASE
 export DEB_RELEASE_SUFFIX := $(shell \
-	git name-rev --name-only --tags --refs v$(GAMESCOPE_VERSION)-$(DEB_RELEASE) --no-undefined HEAD \
+	git name-rev --name-only --tags --refs v$(GAMESCOPE_VERSION)-$(DEB_RELEASE) --no-undefined HEAD 1>&2 \
 	&& echo "" \
 	|| echo "~git$$(git rev-parse --short HEAD)" \
 )
