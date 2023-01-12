@@ -73,7 +73,7 @@ jobs:
 
       - name: Build gamescope
         run: |
-          (cd gamescope; git fetch --tags)
+          (cd gamescope; git fetch --tags --no-recurse-submodules)
           cd ubuntu_22.04/02-gamescope
           make
 
