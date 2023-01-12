@@ -9,7 +9,7 @@ export DEB_RELEASE
 export DEB_RELEASE_SUFFIX := $(shell \
 	git name-rev --name-only --tags --refs v$(GAMESCOPE_VERSION)-$(DEB_RELEASE) --no-undefined HEAD 1>&2 \
 	&& echo "" \
-	|| echo "~git$$(git rev-parse --short HEAD)" \
+	|| echo "~git~$$(git show -s --format=%ct HEAD)~$$(git rev-parse --short HEAD)" \
 )
 
 export PACKAGE_VERSION=$(GAMESCOPE_VERSION)-$(DEB_RELEASE)$(DEB_RELEASE_SUFFIX)
@@ -33,6 +33,7 @@ package: | $(PACKAGE_NAME).deb
 	mkdir -p pkg_tmp
 	cp -rP ../02-gamescope/package/. pkg_tmp
 	cp -r ./debian pkg_tmp/DEBIAN
+	dpkg-gencontrol -cdebian/control -lchangelog -O -v$${PACKAGE_VERSION:?} > pkg_tmp/DEBIAN/control
 
 	# drop dodgy symlinks from the -dev packages
 	(
