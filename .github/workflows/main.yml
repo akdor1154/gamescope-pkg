@@ -27,7 +27,7 @@ jobs:
           cat /etc/subgid
 
       - name: container apt cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v3
         env:
           PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
         with:
@@ -37,7 +37,7 @@ jobs:
             ubuntu_22.04-apt-cache
 
       - name: container image cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v3
         env:
           PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
         with:
@@ -47,7 +47,7 @@ jobs:
             ubuntu_22.04-podman-cache
 
       - name: deps cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v3
         env:
           PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
         with:
@@ -80,3 +80,30 @@ jobs:
         run: |
           cd ubuntu_22.04/03-package
           make
+
+      - name: save container image cache
+        uses: actions/cache/save@v3
+        if: always()
+        env:
+          PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
+        with:
+          path: ~/.local/share/containers/storage
+          key: ubuntu_22.04-podman-cache-${{ github.run_id }}
+
+      - name: save deps cache
+        uses: actions/cache/save@v3
+        if: always()
+        env:
+          PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
+        with:
+          path: ubuntu_22.04/01-deps/packages
+          key: ubuntu_22.04-deps-cache-${{ github.run_id }}
+
+      - name: save apt cache
+        uses: actions/cache/save@v3
+        if: always()
+        env:
+          PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
+        with:
+          path: ubuntu_22.04/.cache
+          key: ubuntu_22.04-apt-cache-${{ github.run_id }}
