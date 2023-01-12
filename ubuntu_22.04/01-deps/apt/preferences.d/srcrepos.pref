@@ -1,0 +1,7 @@
+Package: *
+Pin: release a=unstable
+Pin-Priority: -1
+
+Package: *
+Pin: release a=kinetic
+Pin-Priority: -1
