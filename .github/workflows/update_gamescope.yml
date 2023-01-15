@@ -1,0 +1,53 @@
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '40 0,12 * * *'
+
+  push:
+    branches: 'update-gamescope-script'
+
+jobs:
+  check_updates:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: add build deps and set git
+        run: |
+          sudo apt-get install -y devscripts
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - if: github.event_name == 'on'
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          submodules: recursive
+
+      - if: github.event_name == 'push'
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch --no-recurse-submodules
+          (
+            cd gamescope
+            git fetch --no-recurse-submodules
+            git fetch --no-recurse-submodules --tag
+          )
+
+          set +e
+          ./scripts/gamescope_version.py
+          RESULT=$?
+          set -e
+
+          if [[ $RESULT -eq 42 ]]; then
+            echo '::warning ::Update found, PR raised.'
+          elif [[ $RESULT -eq 43 ]]; then
+            echo '::warning ::Update found, update branch already exists, you probably have a PR to merge..'
+          else
+            exit $RESULT
+          fi
