@@ -90,6 +90,15 @@ jobs:
           name: gamescope-deb
           path: ubuntu_22.04/03-package/*.deb
 
+      - name: Lint package
+        run: |
+          cd ubuntu_22.04/03-package
+          make lint
+
+      - name: Test install package
+        run: |
+          cd ubuntu_22.04/03-package
+          make test-install
 
       - name: save container image cache
         uses: actions/cache/save@v3
