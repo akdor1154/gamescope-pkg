@@ -1,3 +1,9 @@
+gamescope (3.11.51-7) UNRELEASED; urgency=medium
+
+  * lint + test install of deb package in github actions
+
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Sun, 15 Jan 2023 13:06:21 +1100
+
 gamescope (3.11.51-7) jammy; urgency=medium
 
   * set gh release notes from debian changelog
