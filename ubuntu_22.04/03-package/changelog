@@ -1,4 +1,4 @@
-gamescope (3.11.48.1-1) UNRELEASED; urgency=medium
+gamescope (3.11.48.1-1) jammy; urgency=medium
 
   [ Jarrad Whitaker ]
   * lint + test install of deb package in github actions
@@ -6,7 +6,7 @@ gamescope (3.11.48.1-1) UNRELEASED; urgency=medium
   [  ]
   * Bump gamescope to new tag 3.11.48.1
 
- --  <akdor1154@noreply.users.github.com>  Sun, 15 Jan 2023 12:56:24 +0000
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Mon, 16 Jan 2023 16:42:52 +1100
 
 gamescope (3.11.51-7) jammy; urgency=medium
 
