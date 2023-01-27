@@ -47,3 +47,12 @@ clean:
 	rm -rf ./packages
 	podman image rm gamescopedepsimg || true
 	podman rm gamescopedeps || true
+
+.PHONY: check-deps
+check-deps: image
+	exec podman run -i --rm \
+		--name gamescopedeps \
+		--volume .:/01-deps \
+		--workdir /01-deps \
+		gamescopedepsimg \
+		python3 query-deps.py > versions_new.mk
