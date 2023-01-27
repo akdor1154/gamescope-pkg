@@ -13,6 +13,8 @@ These are unsupported by me, but they are even more unsupported by the Gamescope
  - [ ] debian archive (in gh pages? ubuntu ppa?)
  - [ ] more OSes than just Ubuntu 22.04? (though the packages as-is should work on 22.10 and newish Debian as well)
  - [ ] gpg signing
+ - [ ] master / nightly builds
+ - [ ] bot to update vendored deps as well as gamescope itself
 
 ## Technical notes
 
