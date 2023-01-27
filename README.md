@@ -8,6 +8,10 @@ I should do a reasonable job of keeping them up to date with Gamescope releases,
 
 These are unsupported by me, but they are even more unsupported by the Gamescope team who have nothing to do with them. Please don't raise issues on the Gamescope issue tracker without reproducing against Gamescope master. Feel free to raise issues / discussions in this repo though.
 
+## Licence
+
+These build scripts are GPL licenced. Gamescope itself is MIT. (Gamescope guys, if you'd like this MIT I'll happily relicence). If you PR to this repo, please give a comment that you assign me the right to relicence your code under any GPL-compatible OSI-approved licence, to allow me to switch to MIT if needed.
+
 ## Maybe TODO
 
  - [ ] debian archive (in gh pages? ubuntu ppa?)
