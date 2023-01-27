@@ -20,7 +20,6 @@ def cd(dir: str):
         os.chdir(currentDir)
 
 def main():
-    run(['git', 'checkout', 'main'])
 
     with cd('./ubuntu_22.04/01-deps'):
         run(['make', 'check-deps'])
@@ -38,6 +37,7 @@ def main():
         eprint('Updates found!')
 
 
+    run(['git', 'checkout', 'main'])
     BRANCH_NAME = 'auto-versions'
     run(['git', 'checkout', '-B', BRANCH_NAME])
 
