@@ -113,7 +113,7 @@ $(BUILD):
 
 .PHONY: libwayland
 libwayland: FROM=packages/wayland-$${WAYLAND_VERSION:?}/wayland-*/debian
-libwayland: packages/wayland $(BUILD)
+libwayland: packages/wayland-$(WAYLAND_VERSION) $(BUILD)
 	set -e
 
 	cp -rP $(FROM)/libwayland-server0/usr/. $(BUILD)/.
@@ -121,7 +121,7 @@ libwayland: packages/wayland $(BUILD)
 	cp -rP $(FROM)/libwayland-bin/usr/. $(BUILD)/.
 .PHONY: libdrm
 libdrm: FROM=packages/libdrm-$${LIBDRM_VERSION:?}/libdrm-*/debian
-libdrm: packages/libdrm $(BUILD)
+libdrm: packages/libdrm-$(LIBDRM_VERSION) $(BUILD)
 	set -e
 
 	mkdir -p $(BUILD)/share/libdrm
@@ -136,21 +136,21 @@ libdrm: packages/libdrm $(BUILD)
 
 .PHONY: wayland-protocols
 wayland-protocols: FROM=packages/wayland-protocols-$${WAYLAND_PROTOCOLS_VERSION:?}/wayland-protocols-*/debian
-wayland-protocols: packages/wayland-protocols $(BUILD)
+wayland-protocols: packages/wayland-protocols-$(WAYLAND_PROTOCOLS_VERSION) $(BUILD)
 	set -e
 
 	cp -rP $(FROM)/wayland-protocols/usr/. $(BUILD)/.
 
 .PHONY: hwdata
 hwdata: FROM=packages/hwdata-$${HWDATA_VERSION:?}/hwdata-*/debian
-hwdata: packages/hwdata $(BUILD)
+hwdata: packages/hwdata-$(HWDATA_VERSION) $(BUILD)
 	set -e
 	
 	cp -rP $(FROM)/hwdata/usr/. $(BUILD)/.
 
 .PHONY: vkheaders
 vkheaders: FROM=packages/vkheaders-$${VULKAN_LOADER_VERSION:?}/vulkan-loader-*/debian
-vkheaders: packages/vkheaders $(BUILD)
+vkheaders: packages/vkheaders-$(VULKAN_LOADER_VERSION) $(BUILD)
 	set -e
 	
 	cp -rP $(FROM)/libvulkan1/usr/. $(BUILD)/.

@@ -3,6 +3,8 @@ FROM docker.io/ubuntu:22.04
 RUN sed -i -e 's/^# deb-src/deb-src/' /etc/apt/sources.list
 RUN rm -f /etc/apt/apt.conf.d/docker-clean
 
+ADD http://archive.ubuntu.com/ubuntu/dists/jammy-updates/Release apt_update_cachebust
+
 RUN apt-get -y update \
     && apt-get -y install build-essential devscripts
 
