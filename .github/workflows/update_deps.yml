@@ -1,0 +1,43 @@
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '40 0,12 * * *'
+
+  push:
+    branches: 'update-deps-script'
+
+jobs:
+  check_updates:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: add build deps and set git
+        run: |
+          sudo apt-get install -y devscripts
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - if: github.event_name == 'schedule'
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - if: github.event_name == 'push'
+        uses: actions/checkout@v3
+
+      - shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch --no-recurse-submodules
+
+          set +e
+          ./scripts/dep_versions.py
+          RESULT=$?
+          set -e
+
+          if [[ $RESULT -eq 42 ]]; then
+            echo '::warning ::Update found, PR raised.'
+          else
+            exit $RESULT
+          fi
