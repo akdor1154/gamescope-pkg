@@ -6,6 +6,8 @@ on:
   push:
     branches: 'update-gamescope-script'
 
+  workflow_dispatch:
+
 jobs:
   check_updates:
     runs-on: ubuntu-latest
