@@ -1,3 +1,11 @@
+gamescope (3.11.52-beta2-2) UNRELEASED; urgency=medium
+
+  * Bump dependencies  WAYLAND_VERSION=1.21.0-1 LIBDRM_VERSION=2.4.113-2
+    WAYLAND_PROTOCOLS_VERSION=1.31-1 HWDATA_VERSION=0.368-1
+    VULKAN_LOADER_VERSION=1.3.239.0-1
+
+ --  <akdor1154@noreply.users.github.com>  Sat, 04 Mar 2023 02:09:07 +0000
+
 gamescope (3.11.52-beta2-1) jammy; urgency=medium
 
   [ akdor1154@noreply.users.github.com ]
