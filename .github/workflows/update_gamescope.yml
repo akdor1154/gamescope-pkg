@@ -19,7 +19,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - if: github.event_name == 'schedule'
+      - if: github.event_name != 'push'
         uses: actions/checkout@v3
         with:
           ref: main
