@@ -1,3 +1,9 @@
+gamescope (3.11.52-beta5-1) UNRELEASED; urgency=medium
+
+  * Bump gamescope to new tag 3.11.52-beta5
+
+ --  <akdor1154@noreply.users.github.com>  Sat, 04 Mar 2023 10:39:14 +0000
+
 gamescope (3.11.52-beta4-1) jammy; urgency=medium
 
   [ akdor1154@noreply.users.github.com ]
