@@ -32,7 +32,7 @@ jobs:
 
       - shell: bash
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.PR_BOT_TOKEN }}
         run: |
           git fetch --no-recurse-submodules
           (
