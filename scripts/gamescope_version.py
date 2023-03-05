@@ -6,9 +6,22 @@ import contextlib
 import os
 import sys
 import textwrap
+import json
 
 run = functools.partial(subprocess.run, check=True, encoding='utf-8')
 eprint = functools.partial(print, file=sys.stderr)
+
+@functools.wraps(subprocess.run)
+def capture(*args, **kwargs):
+    kwargs['capture_output']=True
+    try:
+        return run(*args, **kwargs)
+    except subprocess.CalledProcessError as e:
+        if e.stdout:
+            eprint(e.stdout)
+        if e.stderr:
+            eprint(e.stderr)
+        raise e
 
 @contextlib.contextmanager
 def cd(dir: str):
@@ -84,7 +97,20 @@ def raise_pr(branch_name: str):
         if e.stderr: eprint(e.stderr)
         eprint('Git push failed, is there already a PR/branch for this update?')
         exit(43)
-    run(['gh', 'pr', 'create', '--fill', '--assignee', 'akdor1154'])
+    message = capture(['git', 'show', '-s', '--pretty=format:%s', 'HEAD']).stdout.strip()
+    body = capture(['git', 'show', '-s', '--pretty=format:%B', 'HEAD']).stdout.strip()
+    respRaw = capture([
+        'gh', 'api',
+        '--method', 'POST',
+        '-H', 'Accept: application/vnd.github+json',
+        '/repos/akdor1154/gamescope-pkg/pulls',
+        '-f', f'head={branch_name}',
+        '-f', f'base=main',
+        '-f', f'title={message}',
+        '-f', f'body={body}'
+    ]).stdout.strip()
+    resp = json.loads(respRaw)
+    eprint(f'PR created at {resp["url"]}')
 
 if __name__ == '__main__':
     main()
