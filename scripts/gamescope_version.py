@@ -6,6 +6,7 @@ import contextlib
 import os
 import sys
 import textwrap
+import json
 
 run = functools.partial(subprocess.run, check=True, encoding='utf-8')
 eprint = functools.partial(print, file=sys.stderr)
@@ -84,7 +85,31 @@ def raise_pr(branch_name: str):
         if e.stderr: eprint(e.stderr)
         eprint('Git push failed, is there already a PR/branch for this update?')
         exit(43)
-    run(['gh', 'pr', 'create', '--fill', '--assignee', 'akdor1154'])
+    message = run(['git', 'show', '-s', '--pretty=format:%s', 'HEAD'], capture_output=True).stdout.strip()
+    body = run(['git', 'show', '-s', '--pretty=format:%B', 'HEAD'], capture_output=True).stdout.strip()
+    respRaw = run([
+        'gh', 'api',
+        'method', 'POST',
+        '-H', 'Accept: application/vnd.github+json',
+        '/repos/akdor1154/gamescope-pkg/pulls',
+        '-d', json.dumps({
+            'head': branch_name,
+            'base': 'main',
+            'title': message,
+            'body': body
+        })
+    ], capture_output=True).stdout.strip()
+    resp = json.loads(respRaw)
+    eprint(f'PR created at {resp["url"]}')
+    run([
+        'gh', 'api',
+        'method', 'POST',
+        '-H', 'Accept: application/vnd.github+json',
+        f'/repos/akdor1154/gamescope-pkg/pulls/{resp["id"]}/requested_reviewers',
+        '-d', json.dumps({
+            'reviewers': ['akdor1154']
+        })
+    ])
 
 if __name__ == '__main__':
     main()
