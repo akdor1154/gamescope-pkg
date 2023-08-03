@@ -1,8 +1,9 @@
-gamescope (3.12.0-beta8-1) UNRELEASED; urgency=medium
+gamescope (3.12.0-beta8-1) jammy; urgency=medium
 
+  [ akdor1154@noreply.users.github.com ]
   * Bump gamescope to new tag 3.12.0-beta8
 
- --  <akdor1154@noreply.users.github.com>  Thu, 03 Aug 2023 06:56:51 +0000
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Thu, 03 Aug 2023 14:00:35 +0700
 
 gamescope (3.12.0-beta7-1) jammy; urgency=medium
 
