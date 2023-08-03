@@ -37,4 +37,6 @@ RUN apt-get -y install \
 RUN apt-get -y install \
     libxcb-icccm4-dev \
     libxcb-res0-dev \
-    libxmu-dev
+    libxmu-dev \
+    libglm-dev \
+    libbenchmark-dev
