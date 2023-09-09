@@ -1,8 +1,9 @@
-gamescope (3.12.5-1) UNRELEASED; urgency=medium
+gamescope (3.12.5-1) jammy; urgency=medium
 
   * Bump gamescope to new tag 3.12.5
+  * Change deps to come from Ubuntu Lunar instead of Kinetuc+Sid
 
- -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Sun, 10 Sep 2023 06:35:38 +1000
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Sun, 10 Sep 2023 08:32:00 +1000
 
 gamescope (3.12.0-2) UNRELEASED; urgency=medium
 
