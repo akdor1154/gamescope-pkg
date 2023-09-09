@@ -84,7 +84,9 @@ lint: $(PACKAGE_NAME).deb
 compute-deps:
 	# this outputs computed dependencies, which you can MANUALLY update+commit into
 	# debian/control.
-	dpkg-shlibdeps ./$${PACKAGE_NAME:?}/opt/gamescope/bin/gamescope.real \
+	dpkg-shlibdeps \
+		-e ./$${PACKAGE_NAME:?}/opt/gamescope/bin/gamescope.real \
+		-e ./$${PACKAGE_NAME:?}/opt/gamescope/lib/x86_64-linux-gnu/libSDL2-2.0.so.0.2600.3 \
 		-O \
 		-l./$${PACKAGE_NAME:?}/opt/gamescope/lib/x86_64-linux-gnu \
 		-xlibwayland-server0 \
