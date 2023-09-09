@@ -99,8 +99,38 @@ packages/vkheaders-$(VULKAN_LOADER_VERSION):
 
 .PHONY: packages/libsdl2
 packages/libsdl2: packages/libsdl2-$(LIBSDL2_VERSION)
-packages/libsdl2-$(LIBSDL2_VERSION):
+packages/libsdl2-$(LIBSDL2_VERSION): packages/wayland-$(WAYLAND_VERSION) packages/libdrm-$(LIBDRM_VERSION) packages/wayland-protocols-$(WAYLAND_PROTOCOLS_VERSION)
 	set -ex
+
+	(
+		cd packages/wayland-$${WAYLAND_VERSION:?}
+		dpkg -i \
+			libwayland-egl1_$${WAYLAND_VERSION}_amd64.deb \
+			libwayland-client0_$${WAYLAND_VERSION}_amd64.deb \
+			libwayland-cursor0_$${WAYLAND_VERSION}_amd64.deb \
+			libwayland-dev_$${WAYLAND_VERSION}_amd64.deb \
+			libwayland-server0_$${WAYLAND_VERSION}_amd64.deb \
+			libwayland-bin_$${WAYLAND_VERSION}_amd64.deb
+	)
+
+	(
+		cd packages/libdrm-$${LIBDRM_VERSION:?}
+		dpkg -i \
+			libdrm2_$${LIBDRM_VERSION}_amd64.deb \
+			libdrm-amdgpu1_$${LIBDRM_VERSION}_amd64.deb \
+			libdrm-common_$${LIBDRM_VERSION}_all.deb \
+			libdrm-intel1_$${LIBDRM_VERSION}_amd64.deb \
+			libdrm-nouveau2_$${LIBDRM_VERSION}_amd64.deb \
+			libdrm-radeon1_$${LIBDRM_VERSION}_amd64.deb \
+			libdrm-dev_$${LIBDRM_VERSION}_amd64.deb
+	)
+
+	(
+		cd packages/wayland-protocols-$${WAYLAND_PROTOCOLS_VERSION:?}
+		dpkg -i \
+			wayland-protocols_$${WAYLAND_PROTOCOLS_VERSION}_all.deb
+	)
+
 	rm -rf packages/libsdl2_tmp
 	mkdir -p packages/libsdl2_tmp
 	(
