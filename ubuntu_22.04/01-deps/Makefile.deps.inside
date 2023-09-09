@@ -2,7 +2,7 @@
 .SHELL = bash
 .SHELLFLAGS = -ec
 
-default: libwayland libdrm wayland-protocols hwdata vkheaders
+default: wayland libdrm wayland-protocols hwdata vkheaders libsdl2
 
 include versions.mk
 
@@ -12,6 +12,7 @@ export WAYLAND_PROTOCOLS_VERSION
 export WLROOTS_VERSION
 export HWDATA_VERSION
 export VULKAN_LOADER_VERSION
+export LIBSDL2_VERSION
 
 .PHONY: packages/wayland
 packages/wayland: packages/wayland-$(WAYLAND_VERSION)
@@ -22,8 +23,8 @@ packages/wayland-$(WAYLAND_VERSION):
 	mkdir -p packages/wayland_tmp
 	(
 		cd packages/wayland_tmp
-		# kinetic
-		apt-get source -t kinetic --only-source wayland=$${WAYLAND_VERSION:?} --compile
+		# lunar
+		apt-get source -t lunar --only-source wayland=$${WAYLAND_VERSION:?} --compile
 	)
 	mv -T packages/wayland_tmp packages/wayland-$${WAYLAND_VERSION:?}
 
@@ -36,8 +37,8 @@ packages/libdrm-$(LIBDRM_VERSION):
 	mkdir -p packages/libdrm_tmp
 	(
 		cd packages/libdrm_tmp
-		# kinetic
-		apt-get source -t kinetic --only-source libdrm=$${LIBDRM_VERSION:?} --compile
+		# lunar
+		apt-get source -t lunar --only-source libdrm=$${LIBDRM_VERSION:?} --compile
 	)
 	mv -T packages/libdrm_tmp packages/libdrm-$${LIBDRM_VERSION:?}
 
@@ -50,8 +51,8 @@ packages/wayland-protocols-$(WAYLAND_PROTOCOLS_VERSION):
 	mkdir -p packages/wayland-protocols_tmp
 	(
 		cd packages/wayland-protocols_tmp
-		# sid
-		apt-get source -t unstable --only-source wayland-protocols=$${WAYLAND_PROTOCOLS_VERSION:?} --compile
+		# lunar
+		apt-get source -t lunar --only-source wayland-protocols=$${WAYLAND_PROTOCOLS_VERSION:?} --compile
 	)
 	mv packages/wayland-protocols_tmp packages/wayland-protocols-$${WAYLAND_PROTOCOLS_VERSION:?}
 
@@ -59,13 +60,13 @@ packages/wayland-protocols-$(WAYLAND_PROTOCOLS_VERSION):
 packages/wlroots: packages/wlroots-$(WLROOTS_VERSION)
 packages/wlroots-$(WLROOTS_VERSION):
 	set -ex
-	
+
 	rm -rf packages/wlroots_tmp
 	mkdir -p packages/wlroots_tmp
 	(
 		cd packages/wlroots_tmp
-		# sid
-		apt-get source -t unstable --only-source wlroots=$${WLROOTS_VERSION:?} --compile
+		# lunar
+		apt-get source -t lunar --only-source wlroots=$${WLROOTS_VERSION:?} --compile
 	)
 	mv packages/wlroots_tmp packages/wlroots-$${WLROOTS_VERSION:?}
 
@@ -78,8 +79,8 @@ packages/hwdata-$(HWDATA_VERSION):
 	mkdir -p packages/hwdata_tmp
 	(
 		cd packages/hwdata_tmp
-		# sid
-		apt-get source -t unstable --only-source hwdata=$${HWDATA_VERSION:?} --compile
+		# lunar
+		apt-get source -t lunar --only-source hwdata=$${HWDATA_VERSION:?} --compile
 	)
 	mv packages/hwdata_tmp packages/hwdata-$${HWDATA_VERSION:?}
 
@@ -91,10 +92,22 @@ packages/vkheaders-$(VULKAN_LOADER_VERSION):
 	mkdir -p packages/vkheaders_tmp
 	(
 		cd packages/vkheaders_tmp
-		# sid
-		apt-get source -t unstable --only-source vulkan-loader=$${VULKAN_LOADER_VERSION:?} --compile
+		# lunar
+		apt-get source -t lunar --only-source vulkan-loader=$${VULKAN_LOADER_VERSION:?} --compile
 	)
 	mv packages/vkheaders_tmp packages/vkheaders-$${VULKAN_LOADER_VERSION:?}
+
+.PHONY: packages/libsdl2
+packages/libsdl2: packages/libsdl2-$(LIBSDL2_VERSION)
+packages/libsdl2-$(LIBSDL2_VERSION):
+	set -ex
+	rm -rf packages/libsdl2_tmp
+	mkdir -p packages/libsdl2_tmp
+	(
+		cd packages/libsdl2_tmp
+		apt-get source -t lunar --only-source libsdl2=$${LIBSDL2_VERSION:?} --compile
+	)
+	mv packages/libsdl2_tmp packages/libsdl2-$${LIBSDL2_VERSION:?}
 
 BUILD=./build
 .PHONY: $(BUILD)
@@ -111,14 +124,18 @@ $(BUILD):
 	mkdir -p $(BUILD)/share
 	mkdir -p $(BUILD)/share/pkgconfig
 
-.PHONY: libwayland
-libwayland: FROM=packages/wayland-$${WAYLAND_VERSION:?}/wayland-*/debian
-libwayland: packages/wayland-$(WAYLAND_VERSION) $(BUILD)
+.PHONY: wayland
+wayland: FROM=packages/wayland-$${WAYLAND_VERSION:?}/wayland-*/debian
+wayland: packages/wayland-$(WAYLAND_VERSION) $(BUILD)
 	set -e
 
 	cp -rP $(FROM)/libwayland-server0/usr/. $(BUILD)/.
 	cp -rP $(FROM)/libwayland-dev/usr/. $(BUILD)/.
 	cp -rP $(FROM)/libwayland-bin/usr/. $(BUILD)/.
+	cp -rP $(FROM)/libwayland-client0/usr/. $(BUILD)/.
+	cp -rP $(FROM)/libwayland-egl1/usr/. $(BUILD)/.
+	cp -rP $(FROM)/libwayland-cursor0/usr/. $(BUILD)/.
+
 .PHONY: libdrm
 libdrm: FROM=packages/libdrm-$${LIBDRM_VERSION:?}/libdrm-*/debian
 libdrm: packages/libdrm-$(LIBDRM_VERSION) $(BUILD)
@@ -145,19 +162,31 @@ wayland-protocols: packages/wayland-protocols-$(WAYLAND_PROTOCOLS_VERSION) $(BUI
 hwdata: FROM=packages/hwdata-$${HWDATA_VERSION:?}/hwdata-*/debian
 hwdata: packages/hwdata-$(HWDATA_VERSION) $(BUILD)
 	set -e
-	
+
 	cp -rP $(FROM)/hwdata/usr/. $(BUILD)/.
 
 .PHONY: vkheaders
 vkheaders: FROM=packages/vkheaders-$${VULKAN_LOADER_VERSION:?}/vulkan-loader-*/debian
 vkheaders: packages/vkheaders-$(VULKAN_LOADER_VERSION) $(BUILD)
 	set -e
-	
+
 	cp -rP $(FROM)/libvulkan1/usr/. $(BUILD)/.
-	
+
 	cp -rP $(FROM)/libvulkan-dev/usr/. $(BUILD)/.
 
 	#hack, workaround what something i'm 99% sure is a libvulkan [packaging?] bug
 	sed -i -e 's|libdir=.*|libdir=$${exec_prefix}/lib/x86_64-linux-gnu|' \
 		$(BUILD)/lib/x86_64-linux-gnu/pkgconfig/vulkan.pc
-	
+
+.PHONY: libsdl2
+libsdl2: FROM=packages/libsdl2-$${LIBSDL2_VERSION:?}/libsdl2-*/debian
+libsdl2: packages/libsdl2-$(LIBSDL2_VERSION) $(BUILD)
+	set -e
+
+	cp -rP $(FROM)/libsdl2-2.0-0/usr/. $(BUILD)/.
+
+	cp -rP $(FROM)/libsdl2-dev/usr/. $(BUILD)/.
+
+	#hack, pretty sure this is jarrad not understanding sdl2 build process though
+	sed -i -e 's|-I\$${includedir}/SDL2|-I\$${includedir}/SDL2 -I\$${includedir}/x86_64-linux-gnu|' \
+		$(BUILD)/lib/x86_64-linux-gnu/pkgconfig/sdl2.pc

@@ -3,8 +3,8 @@ FROM docker.io/ubuntu:22.04
 RUN sed -i -e 's/^# deb-src/deb-src/' /etc/apt/sources.list
 RUN rm -f /etc/apt/apt.conf.d/docker-clean
 
-ADD http://ftp.us.debian.org/debian/dists/unstable/Release apt_update_cachebust_sid
-ADD http://archive.ubuntu.com/ubuntu/dists/kinetic/Release apt_update_cachebust_kinetic
+#ADD http://ftp.us.debian.org/debian/dists/unstable/Release apt_update_cachebust_sid
+ADD http://archive.ubuntu.com/ubuntu/dists/lunar/Release apt_update_cachebust_lunar
 
 RUN apt-get -y update \
     && apt-get -y install build-essential devscripts
@@ -13,7 +13,8 @@ RUN apt-get -y build-dep \
     libdrm \
     libwayland-server0 \
     wayland-protocols \
-    libvulkan-dev
+    libvulkan-dev \
+    libsdl2-dev
 
 # debian sid
 RUN apt-key adv --keyserver keyserver.ubuntu.com \

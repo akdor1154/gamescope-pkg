@@ -24,7 +24,6 @@ RUN apt-get -y install \
     libxres-dev \
     libxkbcommon-dev \
     libcap-dev \
-    libsdl2-dev \
     libpipewire-0.3-dev \
     glslang-tools \
     libpixman-1-dev \
@@ -39,4 +38,9 @@ RUN apt-get -y install \
     libxcb-res0-dev \
     libxmu-dev \
     libglm-dev \
-    libbenchmark-dev
+    libbenchmark-dev \
+    libsamplerate0-dev \
+    libxcursor-dev \
+    libxrandr-dev \
+    libxss-dev \
+    libdecor-0-dev

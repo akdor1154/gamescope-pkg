@@ -70,7 +70,7 @@ package: | $(PACKAGE_NAME).deb
 		cat man_header.md
 		cat pkg_tmp/opt/gamescope/doc/README.md
 	) | pandoc --standalone --to man -o pkg_tmp/usr/share/man/man1/gamescope.1
-	
+
 	mv pkg_tmp $(PACKAGE_NAME)
 
 $(PACKAGE_NAME).deb: ./$(PACKAGE_NAME)
@@ -84,11 +84,14 @@ lint: $(PACKAGE_NAME).deb
 compute-deps:
 	# this outputs computed dependencies, which you can MANUALLY update+commit into
 	# debian/control.
-	dpkg-shlibdeps ./$${PACKAGE_NAME:?}/opt/gamescope/bin/gamescope.real \
+	dpkg-shlibdeps \
+		-e ./$${PACKAGE_NAME:?}/opt/gamescope/bin/gamescope.real \
+		-e ./$${PACKAGE_NAME:?}/opt/gamescope/lib/x86_64-linux-gnu/libSDL2-2.0.so.0.2600.3 \
 		-O \
 		-l./$${PACKAGE_NAME:?}/opt/gamescope/lib/x86_64-linux-gnu \
 		-xlibwayland-server0 \
-		-xlibdrm2
+		-xlibdrm2 \
+		-xlibsdl2-2.0-0
 
 .PHONY: test-install
 test-install: test-image

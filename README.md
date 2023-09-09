@@ -18,7 +18,9 @@ These build scripts are GPL licenced. Gamescope itself is MIT. (Gamescope guys, 
  - [ ] more OSes than just Ubuntu 22.04? (though the packages as-is should work on 22.10 and newish Debian as well)
  - [ ] gpg signing
  - [ ] master / nightly builds
- - [ ] bot to update vendored deps as well as gamescope itself
+ - [x] bot to update vendored deps as well as gamescope itself
+ - [ ] keep an eye on weirdness to do with libwayland: gamescope links against vendored libwayland-client etc., but vendored libsdl2 links against system libwayland-client etc. I'm surprised
+   this seems to work but very suspicious it might break something.
 
 ## Technical notes
 
