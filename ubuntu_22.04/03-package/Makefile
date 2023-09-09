@@ -70,7 +70,7 @@ package: | $(PACKAGE_NAME).deb
 		cat man_header.md
 		cat pkg_tmp/opt/gamescope/doc/README.md
 	) | pandoc --standalone --to man -o pkg_tmp/usr/share/man/man1/gamescope.1
-	
+
 	mv pkg_tmp $(PACKAGE_NAME)
 
 $(PACKAGE_NAME).deb: ./$(PACKAGE_NAME)
@@ -88,7 +88,8 @@ compute-deps:
 		-O \
 		-l./$${PACKAGE_NAME:?}/opt/gamescope/lib/x86_64-linux-gnu \
 		-xlibwayland-server0 \
-		-xlibdrm2
+		-xlibdrm2 \
+		-xlibsdl2-2.0-0
 
 .PHONY: test-install
 test-install: test-image
