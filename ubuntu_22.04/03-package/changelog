@@ -1,3 +1,9 @@
+gamescope (3.11.48.2-1) UNRELEASED; urgency=medium
+
+  * Bump gamescope to new tag 3.11.48.2
+
+ --  <akdor1154@noreply.users.github.com>  Sun, 10 Sep 2023 01:37:39 +0000
+
 gamescope (3.12.5-2) jammy; urgency=medium
 
   * Make vendored sdl depend on other vendored deps instead of system
