@@ -14,7 +14,7 @@ jobs:
         run: |
           sudo apt-get install -y pandoc lintian
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -28,115 +28,115 @@ jobs:
           cat /etc/subgid
 
       - name: container apt cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         env:
           PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
         with:
-          path: ubuntu_22.04/.cache
-          key: ubuntu_22.04-apt-cache-${{ github.run_id }}
+          path: ubuntu_24.04/.cache
+          key: ubuntu_24.04-apt-cache-${{ github.run_id }}
           restore-keys: |
-            ubuntu_22.04-apt-cache
+            ubuntu_24.04-apt-cache
 
       - name: container image cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         env:
           PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
         with:
           path: ~/.local/share/containers/storage
-          key: ubuntu_22.04-podman-cache-${{ github.run_id }}
+          key: ubuntu_24.04-podman-cache-${{ github.run_id }}
           restore-keys: |
-            ubuntu_22.04-podman-cache
+            ubuntu_24.04-podman-cache
 
       - name: deps cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         env:
           PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
         with:
-          path: ubuntu_22.04/01-deps/packages
-          key: ubuntu_22.04-deps-cache-${{ github.run_id }}
+          path: ubuntu_24.04/01-deps/packages
+          key: ubuntu_24.04-deps-cache-${{ github.run_id }}
           restore-keys: |
-            ubuntu_22.04-deps-cache
+            ubuntu_24.04-deps-cache
 
       - name: Build deps image
         run: |
-          cd ubuntu_22.04/01-deps
+          cd ubuntu_24.04/01-deps
           make image
 
       - name: Build deps
         run: |
-          cd ubuntu_22.04/01-deps
-          make 
+          cd ubuntu_24.04/01-deps
+          make
 
       - name: Build gamescope build image
         run: |
-          cd ubuntu_22.04/02-gamescope
+          cd ubuntu_24.04/02-gamescope
           make image
 
       - name: Build gamescope
         run: |
           (cd gamescope; git fetch --tags --no-recurse-submodules)
-          cd ubuntu_22.04/02-gamescope
+          cd ubuntu_24.04/02-gamescope
           make
 
       - name: Build package
         run: |
           git fetch --tags --no-recurse-submodules --force
-          cd ubuntu_22.04/03-package
+          cd ubuntu_24.04/03-package
           make
 
       - name: Publish artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gamescope-deb
-          path: ubuntu_22.04/03-package/*.deb
+          path: ubuntu_24.04/03-package/*.deb
 
       - name: Lint package
         run: |
-          cd ubuntu_22.04/03-package
+          cd ubuntu_24.04/03-package
           make lint
 
       - name: Test install package
         run: |
-          cd ubuntu_22.04/03-package
+          cd ubuntu_24.04/03-package
           make test-install
 
       - name: save container image cache
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: always()
         env:
           PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
         with:
           path: ~/.local/share/containers/storage
-          key: ubuntu_22.04-podman-cache-${{ github.run_id }}
+          key: ubuntu_24.04-podman-cache-${{ github.run_id }}
 
       - name: save deps cache
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: always()
         env:
           PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
         with:
-          path: ubuntu_22.04/01-deps/packages
-          key: ubuntu_22.04-deps-cache-${{ github.run_id }}
+          path: ubuntu_24.04/01-deps/packages
+          key: ubuntu_24.04-deps-cache-${{ github.run_id }}
 
       - name: save apt cache
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: always()
         env:
           PATH: /cachetar:/usr/local/bin:/usr/bin:/bin
         with:
-          path: ubuntu_22.04/.cache
-          key: ubuntu_22.04-apt-cache-${{ github.run_id }}
+          path: ubuntu_24.04/.cache
+          key: ubuntu_24.04-apt-cache-${{ github.run_id }}
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: package
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
           name: gamescope-deb
-          path: ubuntu_22.04/03-package/
+          path: ubuntu_24.04/03-package/
 
       - name: Publish github release
         run: |
