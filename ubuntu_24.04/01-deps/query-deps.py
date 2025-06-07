@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-import subprocess
-import functools
-import sys
 import dataclasses
+import functools
+import subprocess
+import sys
 from typing import *
 
 run = functools.partial(subprocess.run, check=True, encoding='utf-8')
@@ -31,12 +31,14 @@ class Dep:
     dist: str
 
 DEPS: List[Dep] = [
-    Dep('WAYLAND_VERSION', 'wayland', 'lunar/main'),
-    Dep('LIBDRM_VERSION', 'libdrm', 'lunar/main'),
-    Dep('WAYLAND_PROTOCOLS_VERSION', 'wayland-protocols', 'lunar/main'),
-    Dep('HWDATA_VERSION', 'hwdata', 'lunar/main'),
-    Dep('VULKAN_LOADER_VERSION', 'vulkan-loader', 'lunar/main'),
-    Dep('LIBSDL2_VERSION', 'libsdl2', 'lunar/main')
+    Dep('WAYLAND_VERSION', 'wayland', 'plucky/main'),
+    Dep('LIBDRM_VERSION', 'libdrm', 'plucky/main'),
+    Dep('WAYLAND_PROTOCOLS_VERSION', 'wayland-protocols', 'plucky/main'),
+    Dep('HWDATA_VERSION', 'hwdata', 'plucky/main'),
+    Dep('VULKAN_LOADER_VERSION', 'vulkan-loader', 'plucky/main'),
+    Dep('LIBSDL2_VERSION', 'libsdl2', 'plucky/main'),
+    Dep('LIBDECOR0_VERSION', 'libdecor-0', 'plucky/main'),
+    Dep('PIXMAN_VERSION', 'pixman', 'plucky/main')
 ]
 
 for dep in DEPS:

@@ -38,15 +38,7 @@ package: | $(PACKAGE_NAME).deb
 	# drop dodgy symlinks from the -dev packages
 	(
 		cd pkg_tmp/opt/gamescope/lib/x86_64-linux-gnu
-		rm libwayland-client.so libwayland-egl.so libdrm_nouveau.so libwayland-cursor.so
-	)
-	# fix dodgy symlinks from hwinfo
-	(
-		cd pkg_tmp/opt/gamescope/share
-		mkdir -p misc
-		cd misc
-		ln -s /usr/share/misc/usb.ids usb.ids
-		ln -s /usr/share/misc/pci.ids pci.ids
+		rm libwayland-client.so libwayland-egl.so libwayland-cursor.so
 	)
 
 	# fix perms
@@ -61,7 +53,11 @@ package: | $(PACKAGE_NAME).deb
 
 	# add to /usr/bin
 	mkdir -p pkg_tmp/usr/bin
-	ln -s /opt/gamescope/bin/gamescope pkg_tmp/usr/bin/gamescope
+	ln -s -t pkg_tmp/usr/bin \
+		/opt/gamescope/bin/gamescope \
+		/opt/gamescope/bin/gamescopereaper \
+		/opt/gamescope/bin/gamescopestream \
+		/opt/gamescope/bin/gamescopectl
 
 	# build manual
 	mkdir -p pkg_tmp/usr/share/man/man1

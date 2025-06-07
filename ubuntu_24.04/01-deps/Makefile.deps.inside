@@ -2,7 +2,7 @@
 .SHELL = bash
 .SHELLFLAGS = -ec
 
-default: wayland libdrm wayland-protocols hwdata vkheaders libsdl2
+default: wayland wayland-protocols xwayland
 
 include versions.mk
 
@@ -13,6 +13,8 @@ export WLROOTS_VERSION
 export HWDATA_VERSION
 export VULKAN_LOADER_VERSION
 export LIBSDL2_VERSION
+export LIBDECOR0_VERSION
+export PIXMAN_VERSION
 
 .PHONY: packages/wayland
 packages/wayland: packages/wayland-$(WAYLAND_VERSION)
@@ -23,8 +25,8 @@ packages/wayland-$(WAYLAND_VERSION):
 	mkdir -p packages/wayland_tmp
 	(
 		cd packages/wayland_tmp
-		# lunar
-		apt-get source -t lunar --only-source wayland=$${WAYLAND_VERSION:?} --compile
+		# mantic
+		apt-get source -t mantic --only-source wayland=$${WAYLAND_VERSION:?} --compile
 	)
 	mv -T packages/wayland_tmp packages/wayland-$${WAYLAND_VERSION:?}
 
@@ -37,22 +39,33 @@ packages/libdrm-$(LIBDRM_VERSION):
 	mkdir -p packages/libdrm_tmp
 	(
 		cd packages/libdrm_tmp
-		# lunar
-		apt-get source -t lunar --only-source libdrm=$${LIBDRM_VERSION:?} --compile
+		# mantic
+		apt-get source -t mantic --only-source libdrm=$${LIBDRM_VERSION:?} --compile
 	)
 	mv -T packages/libdrm_tmp packages/libdrm-$${LIBDRM_VERSION:?}
 
 .PHONY: packages/wayland-protocols
 packages/wayland-protocols: packages/wayland-protocols-$(WAYLAND_PROTOCOLS_VERSION)
-packages/wayland-protocols-$(WAYLAND_PROTOCOLS_VERSION):
+packages/wayland-protocols-$(WAYLAND_PROTOCOLS_VERSION): packages/wayland-$(WAYLAND_VERSION)
 	set -ex
+
+	(
+		cd packages/wayland-$${WAYLAND_VERSION:?}
+		dpkg -i \
+			libwayland-egl1_$${WAYLAND_VERSION}_amd64.deb \
+			libwayland-client0_$${WAYLAND_VERSION}_amd64.deb \
+			libwayland-cursor0_$${WAYLAND_VERSION}_amd64.deb \
+			libwayland-dev_$${WAYLAND_VERSION}_amd64.deb \
+			libwayland-server0_$${WAYLAND_VERSION}_amd64.deb \
+			libwayland-bin_$${WAYLAND_VERSION}_amd64.deb
+	)
 
 	rm -rf packages/wayland-protocols_tmp
 	mkdir -p packages/wayland-protocols_tmp
 	(
 		cd packages/wayland-protocols_tmp
-		# lunar
-		apt-get source -t lunar --only-source wayland-protocols=$${WAYLAND_PROTOCOLS_VERSION:?} --compile
+		# mantic
+		apt-get source -t mantic --only-source wayland-protocols=$${WAYLAND_PROTOCOLS_VERSION:?} --compile
 	)
 	mv packages/wayland-protocols_tmp packages/wayland-protocols-$${WAYLAND_PROTOCOLS_VERSION:?}
 
@@ -65,8 +78,8 @@ packages/wlroots-$(WLROOTS_VERSION):
 	mkdir -p packages/wlroots_tmp
 	(
 		cd packages/wlroots_tmp
-		# lunar
-		apt-get source -t lunar --only-source wlroots=$${WLROOTS_VERSION:?} --compile
+		# mantic
+		apt-get source -t mantic --only-source wlroots=$${WLROOTS_VERSION:?} --compile
 	)
 	mv packages/wlroots_tmp packages/wlroots-$${WLROOTS_VERSION:?}
 
@@ -79,8 +92,8 @@ packages/hwdata-$(HWDATA_VERSION):
 	mkdir -p packages/hwdata_tmp
 	(
 		cd packages/hwdata_tmp
-		# lunar
-		apt-get source -t lunar --only-source hwdata=$${HWDATA_VERSION:?} --compile
+		# mantic
+		apt-get source -t mantic --only-source hwdata=$${HWDATA_VERSION:?} --compile
 	)
 	mv packages/hwdata_tmp packages/hwdata-$${HWDATA_VERSION:?}
 
@@ -92,14 +105,28 @@ packages/vkheaders-$(VULKAN_LOADER_VERSION):
 	mkdir -p packages/vkheaders_tmp
 	(
 		cd packages/vkheaders_tmp
-		# lunar
-		apt-get source -t lunar --only-source vulkan-loader=$${VULKAN_LOADER_VERSION:?} --compile
+		# mantic
+		apt-get source -t mantic --only-source vulkan-loader=$${VULKAN_LOADER_VERSION:?} --compile
 	)
 	mv packages/vkheaders_tmp packages/vkheaders-$${VULKAN_LOADER_VERSION:?}
 
+.PHONY: packages/libdecor-0
+packages/libdecor-0: packages/libdecor-0-$(LIBDECOR0_VERSION)
+packages/libdecor-0-$(LIBDECOR0_VERSION): packages/wayland-$(WAYLAND_VERSION)
+	set -ex
+
+	rm -rf packages/libdecor-0_tmp
+	mkdir -p packages/libdecor-0_tmp
+	(
+		cd packages/libdecor-0_tmp
+		apt-get source -t mantic --only-source libdecor-0=$${LIBDECOR0_VERSION:?} --compile
+	)
+	mv packages/libdecor-0_tmp packages/libdecor-0-$${LIBDECOR0_VERSION:?}
+
+
 .PHONY: packages/libsdl2
 packages/libsdl2: packages/libsdl2-$(LIBSDL2_VERSION)
-packages/libsdl2-$(LIBSDL2_VERSION): packages/wayland-$(WAYLAND_VERSION) packages/libdrm-$(LIBDRM_VERSION) packages/wayland-protocols-$(WAYLAND_PROTOCOLS_VERSION)
+packages/libsdl2-$(LIBSDL2_VERSION): packages/wayland-$(WAYLAND_VERSION) packages/libdrm-$(LIBDRM_VERSION) packages/wayland-protocols-$(WAYLAND_PROTOCOLS_VERSION) packages/libdecor-0-$(LIBDECOR0_VERSION)
 	set -ex
 
 	(
@@ -131,13 +158,34 @@ packages/libsdl2-$(LIBSDL2_VERSION): packages/wayland-$(WAYLAND_VERSION) package
 			wayland-protocols_$${WAYLAND_PROTOCOLS_VERSION}_all.deb
 	)
 
+	(
+		cd packages/libdecor-0-$${LIBDECOR0_VERSION:?}
+		dpkg -i \
+			libdecor-0-0_$${LIBDECOR0_VERSION:?}_amd64.deb \
+			libdecor-0-plugin-1-cairo_$${LIBDECOR0_VERSION:?}_amd64.deb \
+			libdecor-0-dev_$${LIBDECOR0_VERSION:?}_amd64.deb
+	)
+
 	rm -rf packages/libsdl2_tmp
 	mkdir -p packages/libsdl2_tmp
 	(
 		cd packages/libsdl2_tmp
-		apt-get source -t lunar --only-source libsdl2=$${LIBSDL2_VERSION:?} --compile
+		apt-get source -t mantic --only-source libsdl2=$${LIBSDL2_VERSION:?} --compile
 	)
 	mv packages/libsdl2_tmp packages/libsdl2-$${LIBSDL2_VERSION:?}
+
+.PHONY: packages/pixman
+packages/pixman: packages/pixman-$(PIXMAN_VERSION)
+packages/pixman-$(PIXMAN_VERSION):
+	set -ex
+
+	rm -rf packages/pixman_tmp
+	mkdir -p packages/pixman_tmp
+	(
+		cd packages/pixman_tmp
+		apt-get source -t mantic --only-source pixman=$${PIXMAN_VERSION:?} --compile
+	)
+	mv packages/pixman_tmp packages/pixman-$${PIXMAN_VERSION:?}
 
 BUILD=./build
 .PHONY: $(BUILD)
@@ -194,6 +242,7 @@ hwdata: packages/hwdata-$(HWDATA_VERSION) $(BUILD)
 	set -e
 
 	cp -rP $(FROM)/hwdata/usr/. $(BUILD)/.
+	cp -rP $(FROM)/pnp.ids/usr/. $(BUILD)/.
 
 .PHONY: vkheaders
 vkheaders: FROM=packages/vkheaders-$${VULKAN_LOADER_VERSION:?}/vulkan-loader-*/debian
@@ -220,3 +269,45 @@ libsdl2: packages/libsdl2-$(LIBSDL2_VERSION) $(BUILD)
 	#hack, pretty sure this is jarrad not understanding sdl2 build process though
 	sed -i -e 's|-I\$${includedir}/SDL2|-I\$${includedir}/SDL2 -I\$${includedir}/x86_64-linux-gnu|' \
 		$(BUILD)/lib/x86_64-linux-gnu/pkgconfig/sdl2.pc
+
+.PHONY: libdecor-0
+libdecor-0: FROM=packages/libdecor-0-$${LIBDECOR0_VERSION:?}/libdecor-0-*/debian
+libdecor-0: packages/libdecor-0-$(LIBDECOR0_VERSION) $(BUILD)
+	set -e
+
+	cp -rP $(FROM)/libdecor-0-0/usr/. $(BUILD)/.
+	cp -rP $(FROM)/libdecor-0-plugin-1-cairo/usr/. $(BUILD)/.
+	cp -rP $(FROM)/libdecor-0-dev/usr/. $(BUILD)/.
+
+
+.PHONY: pixman
+pixman: FROM=packages/pixman-$${PIXMAN_VERSION:?}/pixman-*/debian
+pixman: packages/pixman-$(PIXMAN_VERSION) $(BUILD)
+	set -e
+
+	cp -rP $(FROM)/libpixman-1-0/usr/. $(BUILD)/.
+	cp -rP $(FROM)/libpixman-1-dev/usr/. $(BUILD)/.
+
+xwayland: $(BUILD)
+	set -e
+
+	# hack-ish - new xwayland comes with pc, xwayland from focal does not.
+	# instead of building all of xwayland from mantic or something, instead we just hack a pc
+	# for the focal version to keep meson happy.
+	# just what you wanted, heredoc in a oneshell in a makefile
+	cat > $(BUILD)/lib/x86_64-linux-gnu/pkgconfig/xwayland.pc <<-'EOF'
+		prefix=/usr
+		exec_prefix=${prefix}
+
+		Name: Xwayland
+		Description: X Server for Wayland
+		Version: 22.1.8
+		xwayland=/usr/bin/Xwayland
+		have_glamor=true
+		have_eglstream=true
+		have_initfd=true
+		have_listenfd=true
+		have_verbose=true
+		have_terminate_delay=true
+		have_no_touch_pointer_emulation=true
+	EOF

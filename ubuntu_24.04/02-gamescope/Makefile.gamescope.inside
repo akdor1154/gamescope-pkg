@@ -18,7 +18,7 @@ build: | ./gamescope-prefix
 	git name-rev --name-only --tags --refs $${GAMESCOPE_TAG:?} --no-undefined HEAD
 
 	export "PKG_CONFIG_PATH=$${DEPS_REL}/lib/x86_64-linux-gnu/pkgconfig:$${DEPS_REL}/share/pkgconfig"
-	
+
 	meson \
 		--prefix '/opt/gamescope' \
 		'/build/02-gamescope/gamescope-build'
@@ -57,6 +57,11 @@ $(PACKAGEPREFIX):
 	(
 		cd $(PACKAGEPREFIX)/opt/gamescope/bin
 		mv gamescope gamescope.real
+		mv gamescopectl gamescopectl.real
+		mv gamescopereaper gamescopereaper.real
+		mv gamescopestream gamescopestream.real
 	)
 	cp -P gamescope-wrapper.sh $(PACKAGEPREFIX)/opt/gamescope/bin/gamescope
-
+	cp -P gamescope-wrapper.sh $(PACKAGEPREFIX)/opt/gamescope/bin/gamescopectl
+	cp -P gamescope-wrapper.sh $(PACKAGEPREFIX)/opt/gamescope/bin/gamescopereaper
+	cp -P gamescope-wrapper.sh $(PACKAGEPREFIX)/opt/gamescope/bin/gamescopestream
