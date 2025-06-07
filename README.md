@@ -1,8 +1,11 @@
-# Gamescope packages for Ubuntu 22.04
+# Gamescope packages for Ubuntu ~22.04~ 24.04
 
-This repo contains unofficial [Gamescope](https://github.com/ValveSoftware/gamescope) packages for Ubuntu/Pop!_OS 22.04. Currently they are published as .deb files in Github releases, though I would like to make a proper deban archive in future.
+This repo contains unofficial [Gamescope](https://github.com/ValveSoftware/gamescope) packages for Ubuntu/Pop!_OS 24.04.
 
-I should do a reasonable job of keeping them up to date with Gamescope releases, as there's a bot which should raise a PR when a new release needs packaging.
+In the past I targeted 22.04, but this became impossible with newer Gamescope. The last release that
+works for 22.04 is [v3.12.5-2](https://github.com/akdor1154/gamescope-pkg/releases/tag/v3.12.5-2).
+
+~I should do a reasonable job of keeping them up to date with Gamescope releases, as there's a bot which should raise a PR when a new release needs packaging.~ I do an absolutely deplorable job of keeping this up-to-date, sorry.
 
 ## Support
 
