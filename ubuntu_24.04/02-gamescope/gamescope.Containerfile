@@ -47,4 +47,5 @@ RUN apt-get -y install \
 	hwdata \
 	libvulkan-dev \
 	libdrm-dev \
-	libdecor-0-dev
+	libdecor-0-dev \
+	libluajit-5.1-dev

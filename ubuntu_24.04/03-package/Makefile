@@ -92,18 +92,14 @@ compute-deps:
 	# debian/control.
 	dpkg-shlibdeps \
 		-e ./$${PACKAGE_NAME:?}/opt/gamescope/bin/gamescope.real \
-		-e ./$${PACKAGE_NAME:?}/opt/gamescope/lib/x86_64-linux-gnu/libSDL2-2.0.so.0.2600.3 \
 		-O \
 		-v \
 		-l./$${PACKAGE_NAME:?}/opt/gamescope/lib/x86_64-linux-gnu \
 		-xlibwayland-server0 \
-		-xlibdrm2 \
 		-xlibwayland-client0 \
 		-xlibwayland-egl0 \
 		-xlibwayland-egl1 \
-		-xlibwayland-cursor0 \
-		-xlibsdl2-2.0-0 \
-		-xlibvulkan1
+		-xlibwayland-cursor0
 
 .PHONY: test-install
 test-install: test-image

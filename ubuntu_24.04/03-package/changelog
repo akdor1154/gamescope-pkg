@@ -1,3 +1,10 @@
+gamescope (3.16.11-1) UNRELEASED; urgency=medium
+
+  * Bump to Gamescope 3.16.11
+  * Bump package dependencies, they are probably wrong in the previous deb
+
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Sun, 08 Jun 2025 16:07:06 +1000
+
 gamescope (3.14.26-1) noble; urgency=medium
 
   * Give up on Ubuntu Jammy - newer Gamescope requires newer GCC, that's my
