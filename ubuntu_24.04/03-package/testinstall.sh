@@ -2,5 +2,6 @@
 
 set -ex
 
-apt install -y /pkg/gamescope_*.deb
+LATEST_DEB=$(find . -name 'gamescope_*.deb' | sort -V -r | head -n 1)
+apt install -y "$LATEST_DEB"
 gamescope --help
