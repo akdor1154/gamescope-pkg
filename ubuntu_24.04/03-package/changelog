@@ -1,11 +1,11 @@
-gamescope (3.14.26-1) UNRELEASED; urgency=medium
+gamescope (3.14.26-1) noble; urgency=medium
 
   * Give up on Ubuntu Jammy - newer Gamescope requires newer GCC, that's my
     limit of stuff to backport; even if it compiles it will probably explode
     as soon as you launch and look through it.
   * Bump gamescope to somewhat arbitrary new tag of 3.14.26
 
- -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Sun, 08 Jun 2025 09:34:46 +1000
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Sun, 08 Jun 2025 10:24:44 +1000
 
 gamescope (3.12.5-2) jammy; urgency=medium
 
