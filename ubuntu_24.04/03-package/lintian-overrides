@@ -9,3 +9,10 @@ gamescope binary: python3-script-but-no-python3-dep *[opt/gamescope/share/*]*
 gamescope binary: script-not-executable *[opt/gamescope/share/*]*
 
 gamescope binary: initial-upload-closes-no-bugs
+
+gamescope binary: embedded-library
+gamescope binary: package-section-games-but-contains-no-game
+gamescope binary: groff-message *warning: cannot select font*
+
+# Gamescope's default build options leave unstripped, I don't want to mess with them
+gamescope binary: unstripped-binary-or-object

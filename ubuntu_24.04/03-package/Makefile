@@ -65,7 +65,17 @@ package: | $(PACKAGE_NAME).deb
 		echo "% GAMESCOPE(1) $${PACKAGE_VERSION:?} | Autogenned from gamescope readme"
 		cat man_header.md
 		cat pkg_tmp/opt/gamescope/doc/README.md
-	) | pandoc --standalone --to man -o pkg_tmp/usr/share/man/man1/gamescope.1
+	) | pandoc --standalone --to man \
+	| gzip -9 \
+	>  pkg_tmp/usr/share/man/man1/gamescope.1.gz
+
+	(
+		cd pkg_tmp/usr/share/man/man1
+		cp gamescope.1.gz gamescopectl.1.gz
+		cp gamescope.1.gz gamescopereaper.1.gz
+		cp gamescope.1.gz gamescopestream.1.gz
+	)
+
 
 	mv pkg_tmp $(PACKAGE_NAME)
 
