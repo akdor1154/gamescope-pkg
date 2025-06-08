@@ -34,3 +34,5 @@ A lot of gamescope's dependencies are newer than what's available in Ubuntu 22.0
 ### Build scripts
 
 The package build scripts here are almost aggressively not DRY, because generalized packaging scripts are unreadable to me. This is also a nearly pedagogical exercize in figuring out how to build a binary debian package from scratch. This may have to change if I support more dists etc in future, but for now at least you can read what's going on...
+
+To self-build, you'll need at least `pandoc` and `lintian`, along with `podman`. The `main.yml` Github Actions file can be used as a reference.
