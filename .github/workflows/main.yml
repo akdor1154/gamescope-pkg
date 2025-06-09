@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: prepare build deps
         run: |
-          sudo apt-get install -y pandoc lintian
+          sudo apt-get install -y pandoc lintian patchelf
 
       - uses: actions/checkout@v4
         with:
