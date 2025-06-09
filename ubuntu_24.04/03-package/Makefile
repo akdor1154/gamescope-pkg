@@ -33,6 +33,7 @@ package: | $(PACKAGE_NAME).deb
 	mkdir -p pkg_tmp
 	cp -rP ../02-gamescope/package/. pkg_tmp
 	cp -r ./debian pkg_tmp/DEBIAN
+	rm pkg_tmp/DEBIAN/substvars
 	dpkg-gencontrol -cdebian/control -lchangelog -O -v$${PACKAGE_VERSION:?} > pkg_tmp/DEBIAN/control
 
 	# drop dodgy symlinks from the -dev packages
@@ -98,11 +99,10 @@ lint: $(PACKAGE_NAME).deb
 
 .PHONY: compute-deps
 compute-deps:
-	# this outputs computed dependencies, which you can MANUALLY update+commit into
-	# debian/control.
+	# this outputs computed dependencies, which you can MANUALLY commit into
+	# debian/substvars.
 	dpkg-shlibdeps \
-		-e ./$${PACKAGE_NAME:?}/opt/gamescope/bin/gamescope.real \
-		-O \
+		-e ./$${PACKAGE_NAME:?}/opt/gamescope/bin/gamescope \
 		-v \
 		-l./$${PACKAGE_NAME:?}/opt/gamescope/lib/x86_64-linux-gnu \
 		-xlibwayland-server0 \
@@ -117,6 +117,7 @@ test-install: test-image
 		--name gamescopetest \
 		--volume .:/pkg \
 		--volume $$(pwd)/../.cache/image-apt-cache:/var/cache/apt:U \
+		--cap-add=CAP_SETFCAP,CAP_SYS_NICE \
 		gamescopetestimg \
 		/pkg/testinstall.sh
 	trap "podman rm gamescopetest" EXIT
