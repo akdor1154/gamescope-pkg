@@ -1,0 +1,12 @@
+.cache
+
+01-deps/build
+01-deps/packages
+
+02-gamescope/apt
+02-gamescope/deps-prefix
+02-gamescope/gamescope-prefix
+02-gamescope/package
+
+03-package/gamescope_*/
+03-package/gamescope_*.deb
