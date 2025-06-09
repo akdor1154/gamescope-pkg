@@ -8,7 +8,7 @@ gamescope (3.16.11-2) noble; urgency=medium
     on the built `gamescope` binary. This removes the need for the wrapper
     script, so capabilities can now be passed through properly.
 
- -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Mon, 09 Jun 2025 13:26:47 +1000
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Mon, 09 Jun 2025 13:37:41 +1000
 
 gamescope (3.16.11-1) noble; urgency=medium
 
