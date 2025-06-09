@@ -1,3 +1,15 @@
+gamescope (3.16.11-2) UNRELEASED; urgency=medium
+
+  * Add realtime capabilities.
+  * Re-do dynamic library override system. Previously we used `ld.so`'s
+    --prefix arg to do this in a wrapper script. However, this removed
+    the ability to get the SYS_NICE capability on the running gamescope.
+    To work around this, I'm now setting the deprecated DT_RPATH directly
+    on the built `gamescope` binary. This removes the need for the wrapper
+    script, so capabilities can now be passed through properly.
+
+ -- Jarrad Whitaker <akdor1154@noreply.users.github.com>  Mon, 09 Jun 2025 12:51:39 +1000
+
 gamescope (3.16.11-1) noble; urgency=medium
 
   * Bump to Gamescope 3.16.11

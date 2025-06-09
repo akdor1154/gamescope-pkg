@@ -48,20 +48,8 @@ deps-prefix:
 PACKAGEPREFIX=./package-prefix
 .PHONY: package
 package: | $(PACKAGEPREFIX)
-$(PACKAGEPREFIX): build gamescope-wrapper.sh
+$(PACKAGEPREFIX): build
 $(PACKAGEPREFIX):
 	mkdir -p $(PACKAGEPREFIX)
 	cp -rP ./gamescope-prefix/. $(PACKAGEPREFIX)/.
 	cp -rP ./deps-prefix/. $(PACKAGEPREFIX)/opt/gamescope/.
-
-	(
-		cd $(PACKAGEPREFIX)/opt/gamescope/bin
-		mv gamescope gamescope.real
-		mv gamescopectl gamescopectl.real
-		mv gamescopereaper gamescopereaper.real
-		mv gamescopestream gamescopestream.real
-	)
-	cp -P gamescope-wrapper.sh $(PACKAGEPREFIX)/opt/gamescope/bin/gamescope
-	cp -P gamescope-wrapper.sh $(PACKAGEPREFIX)/opt/gamescope/bin/gamescopectl
-	cp -P gamescope-wrapper.sh $(PACKAGEPREFIX)/opt/gamescope/bin/gamescopereaper
-	cp -P gamescope-wrapper.sh $(PACKAGEPREFIX)/opt/gamescope/bin/gamescopestream

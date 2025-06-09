@@ -44,6 +44,16 @@ package: | $(PACKAGE_NAME).deb
 	# fix perms
 	chmod ugo-x pkg_tmp/opt/gamescope/lib/x86_64-linux-gnu/*.so
 
+	# patch rpath so we load bundled libs instead of system ones
+	(
+		cd pkg_tmp/opt/gamescope/bin
+		patchelf --set-rpath '$$ORIGIN/../lib/x86_64-linux-gnu' --force-rpath \
+			gamescope \
+			gamescopereaper \
+			gamescopestream \
+			gamescopectl
+	)
+
 	mkdir -p pkg_tmp/usr/share/lintian/overrides
 	cp ./lintian-overrides pkg_tmp/usr/share/lintian/overrides/gamescope
 
