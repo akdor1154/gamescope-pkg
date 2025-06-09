@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+(
+    cd /opt/gamescope/bin
+    setcap \
+        'cap_sys_nice=ep' gamescope \
+        'cap_sys_nice=ep' gamescopectl \
+        'cap_sys_nice=ep' gamescopereaper \
+        'cap_sys_nice=ep' gamescopestream
+)
